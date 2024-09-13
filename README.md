@@ -16,14 +16,13 @@ Some examples for these services would be:
 
 ![Fediverse instances using difference auxiliary service providers](images/instances_using_providers.svg)
 
-
-Read a more thorough explanation in the [Provider Instance Interaction Specification](general/provider_instance_interaction_v0.1.md).
+Read a more thorough explanation in the [Provider Instance Interaction Specification introduction](general/v0.1/introduction.md).
 
 ## List of Specifications
 
 ### General
 
-[Provider Instance Interaction](general/provider_instance_interaction_v0.1.md) specifies the initial setup of the instance and provider relationship and their general interaction. This should be common to all providers and forms the basis for the other specifications below.
+[Provider Instance Interaction](general/v0.1/) specifies the initial setup of the instance and provider relationship and their general interaction. This should be common to all providers and forms the basis for the other specifications below.
 
 ### Dummy
 
