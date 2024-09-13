@@ -92,18 +92,16 @@ software projects already use anyway should be re-used wherever
 possible. This approach SHOULD be taken by all provider specifications
 that build on this one.
 
-Communication between instance and provider MUST use HTTPS.
+Communication between instance and provider MUST use HTTPS in production
+or production-like settings. This requirement MAY only be relaxed in
+development environments.
+
+Registration tokens are JSON Web Tokens (JWT) as defined in
+[RFC-7519](https://datatracker.ietf.org/doc/html/rfc7519).
 
 For authentication and authorization of API calls, provider and instance
 use the OAuth 2.0 protocol as defined in
 [RFC-6749](https://tool.ietf.org/html/rfc6749.html).
-
-As an instance administrator registers with the provider, the
-"authorization code" grant type with PKCE is used to authorize when the
-instance calls into the provider.
-
-If the provider calls into the instance, the "client credentials" grant
-type is used.
 
 Both instance and provider SHOULD issue refresh tokens and expire access
 tokens. Both MUST be able to handle access token expiration and request
