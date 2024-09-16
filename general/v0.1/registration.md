@@ -33,16 +33,29 @@ administrator. This MAY include but is not limited to the following:
 As the result of the registration, a provider MUST present the instance
 administrator a registration token that can be copied into the instance.
 
-The registration token is a JSON Web Token (JWT) that includes in its
-payload:
+The registration token is a JSON Web Token (JWT) that MUST includes the
+registered claims `iss` and `sub` and the private claim `sec`. It MAY
+contain the registered claim `exp`.
 
-* A set of OAuth 2.0 credentials consisting of a client identifier and a
-  secret.
-* The base URL for API requests to the provider
+These claims MUST contain the following:
+
+* `iss`: The base URI for API requests to the provider.
+* `sub`: The OAuth 2.0 client identifier
+* `sec`: The OAuth 2.0 client secret
+* `exp`: An optional expiration time
+
+An example payload:
 
 ```
-TODO example JWT
+{
+  "iss": "https://provider.example.com",
+  "sub": "b2ks6vm8p23w",
+  "sec": "H4bo9pER2Ww4MlPs2Rf",
+  "exp": 1726498179
+}
 ```
+
+TODO: Do we want / need to JWT to be signed?
 
 A provider SHOULD offer a way to re-generate the OAuth credentials and
 this token in case it gets lost or an instance needs to be reinstalled
@@ -57,8 +70,6 @@ Step 1: An instance admin is presented with a registration form
 Step 2: Upon successful registration, the registration token is
 displayed
 
-TODO: Graphic is no longer accurate
-
 ![A webpage displaying a registration token with a button to copy to clipboard](../../images/instance_sign_up_success.svg)
 
 ## Adding a Provider to an Instance
@@ -70,9 +81,11 @@ To add a new provider, the adminstrator MUST enter / paste the
 registration token obtained in the previous step). The instance's
 software MUST validate the token before proceeding.
 
-TODO: What exactly needs validating?
+This validation MUST include:
 
-TODO: Graphic is no longer accurate
+* Ensuring the presence of the `iss`, `sub` and `sec` claims
+* Ensuring that `iss` is a valid HTTP(S) URI
+* If `exp` is present, ensure the date it represents is not in the past
 
 ![A bare-bones web form to add a provider with a textarea for the registration token](../../images/add_provider.svg)
 
@@ -123,4 +136,5 @@ and supported version numbers.
 The instance software MUST present the admin with the subset of these
 capabilities that it actually supports.
 
-TODO: Mockup
+
+![A web form on the instance that allows to select capabilities that both parties support](../../images/select_capabilities.svg)
