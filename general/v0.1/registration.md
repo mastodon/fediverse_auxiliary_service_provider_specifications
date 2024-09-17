@@ -123,11 +123,8 @@ instance administrator needs to select which capabilities of the
 provider they want to use.
 
 In order to display available capabilities the instance MUST
-call the provider info API endpoint
-
-```
-TODO: Example API call and response
-```
+call the provider info API endpoint (see
+[04: Provider Info](provider_info.md) for a detailed description).
 
 The response includes a list of capability identifiers (see
 [05: Provider Specification](provider_specifications.md) for details)

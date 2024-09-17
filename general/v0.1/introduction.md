@@ -78,11 +78,20 @@ index (5.). Compute-intensive services might be triggerd by an instance
 (4.) but only call-back later (5.) with the results once the computation
 has finished.
 
-### Terms used
+### Definition of Terms and Conventions
 
 The key words "MUST", "MUST NOT", "SHOULD", "SHOULD NOT" and "MAY" in
 this document are to be interpreted as described in
 [RFC-2119](https://tools.ietf.org/html/rfc2119.html).
+
+All examples and descriptions of API calls include path names that are
+meant to be relative to a given base URL. Providers announce their base
+URL in their "registration token" and instances call back with their
+respective base URLs (see section [02: Registration](registration.md)
+for details). For the sake of brevity all examples assume the base URL
+to not contain any paths. Implementations MUST consider the base URL
+and prefix all API paths accordingly if the base URL contains any path
+segments.
 
 ### General Approach and Protocol Basics
 

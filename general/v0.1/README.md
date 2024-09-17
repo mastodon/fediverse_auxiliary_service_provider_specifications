@@ -21,11 +21,10 @@ software instance.
   Describes HTTP interactions between providers and instances that are
   common to all types of providers.
 
-* [04: Privacy Policy](privacy_policy.md)
+* [04: Provider info](provider_info.md)
 
   Describes the basics of an API that providers must offer to query
-  their usage of data. This describes the common parts of this API that
-  specific provider specifications can build on.
+  important metadata about their service.
 
 * [05: Provider Specification](provider_specification.md)
 

@@ -5,10 +5,45 @@
 All provider specifications MUST be based on this one and MUST NOT
 change any of the requirements stated above.
 
+### Mandatory Contents
+
 Every specification MUST include the following:
 
-* A version number
-* The names and descriptions of the provided capabilities (scopes)
+* A version number (see next section for details)
+* The names and descriptions of the provided capabilities
 * The provider's HTTP API endpoints
 * The HTTP API an instance needs to implement for the provider to use
   (or a note that none is required)
+* A summary of personally identifiable information or other data that
+  might be considered sensitive that a provider may receive
+
+### Versioning
+
+Every specification MUST have a version number consisting of a major and
+a minor number, delimited by a single `.` (dot).
+
+Any change to a specification that runs the risk of being incompatible
+to existing implementations MUST increase the major version number.
+
+Clarifications, additions of examples etc. that should not impact
+existing implementations SHOULD increase the minor version number.
+
+Formatting changes, spelling and grammar corrections MAY increase the
+minor version number.
+
+### Capabilities
+
+### Privacy Policy information
+
+Providers may receive personally identifiable information and other data
+that some people might consider sensitive. This must then become part of
+an instance's privacy policy to inform users of what data is being
+processed and how.
+
+Since provider specifications define exactly what data a provider can
+receive, the MUST offer a summary noting which of this data is to be
+considered sensitive from a data protection point of view and why it
+needs to be processed by the provider.
+
+This summary MUST make it easy to copy this directly into the privacy
+policies of instances.
