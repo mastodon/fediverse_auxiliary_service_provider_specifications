@@ -17,7 +17,7 @@ Example response:
 ```json
 {
   "name": "Example provider",
-  "privacy_policy: [
+  "privacy_policy": [
     {
       "url": "https://provider.example.com/privacy.html",
       "language": "en"
