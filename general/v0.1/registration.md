@@ -97,23 +97,37 @@ subsequent API calls.
 TODO: Do we define oauth scopes or do we leave this up to implementers?
 
 If authorization was successful the instance MUST create and persist an
-OAuth 2.0 application representing the provider, including a key and a
-secret.
+OAuth 2.0 application representing the provider, including a client ID
+and a secret.
 
-It MUST communicate the key and secret to the provider using the (TODO)
-API endpoint.
+It MUST communicate its base URL, the generated client ID and secret to
+the provider using the client credentials API endpoint.
 
-TODO: Annotated example request.
+Example request:
 
-The provider MUST respond with a HTTP status code `200` and persist the
-key and secret it received.
+```http
+POST /client_credentials
+```
 
-Until this key and secret have been communicated successfully, a
-provider MAY refuse to accept API requests and respond with the HTTP
+Example request body:
+
+```json
+{
+  "baseURL": "https://instance.example.com",
+  "clientId": "kOP2Bc7oP31zM",
+  "clientSecret": "pl5z4ciwfEP194MwWziP"
+}
+```
+
+The provider MUST respond with a HTTP status code `201` (Created)  and
+persist the ID, secret and base URL it received.
+
+Until this ID, secret and base URL have been communicated successfully,
+a provider MAY refuse to accept API requests and respond with the HTTP
 status code `424` (Failed Dependency) instead.
 
-Fediverse software SHOULD catch this and retry sending the key and
-secret in this case.
+Fediverse software SHOULD catch this and retry sending the data in this
+case.
 
 ### Selecting Capabilities
 
@@ -135,3 +149,7 @@ capabilities that it actually supports.
 
 
 ![A web form on the instance that allows to select capabilities that both parties support](../../images/select_capabilities.svg)
+
+---
+
+Next: [03: Common HTTP interactions](common_http_interactions.md)

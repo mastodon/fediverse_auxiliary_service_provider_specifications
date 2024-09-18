@@ -33,6 +33,33 @@ minor version number.
 
 ### Capabilities
 
+Every provider specification MUST define at least one capability. It MAY
+define more than one capability, but only if the capabilites are
+strongly related.
+
+For every capability defined, the specification MUST include a unique
+identifier. The identifier is a UTF-8 string containing only lower-case
+characters and no whitespace characters. It succinctly describes the
+capability in english using as few words as possible (ideally only a
+single word). If more than one word is needed they MUST be separated by
+an underline character (`_`).
+
+Identifiers MUST be unique, which means they must not be defined in any
+other provider specification.
+
+Examples of capability identifiers:
+
+* `trends`
+* `account_search`
+* `link_previews`
+* `media_storage`
+* `spam_detection`
+
+For every capability defined, the specification MUST also include a one
+paragraph description in english that can be used by fediverse software
+to explain the capabilities to instance administrators. It MAY include
+translations into other languages as well. 
+
 ### Privacy Policy information
 
 Providers may receive personally identifiable information and other data
@@ -41,7 +68,7 @@ an instance's privacy policy to inform users of what data is being
 processed and how.
 
 Since provider specifications define exactly what data a provider can
-receive, the MUST offer a summary noting which of this data is to be
+receive, they MUST include a summary noting which of this data is to be
 considered sensitive from a data protection point of view and why it
 needs to be processed by the provider.
 

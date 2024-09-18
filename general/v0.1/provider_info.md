@@ -67,3 +67,6 @@ The values are defined as follows:
 * `sign_in_url`: If present it MUST contain a string representing the URL where
   an instance administrator can manually sign in to the provider.
 
+---
+
+Next: [05: Provider Specification](provider_specification.md)

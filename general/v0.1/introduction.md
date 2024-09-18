@@ -118,3 +118,7 @@ a new one using the refresh token.
 
 Custom API calls are HTTPS calls sending, if necessary, JSON data
 (`Content-Type: application/json`) and receiving JSON data.
+
+---
+
+Next: [02: Registration](registration.md)
