@@ -69,4 +69,4 @@ The values are defined as follows:
 
 ---
 
-Next: [05: Provider Specification](provider_specification.md)
+Next: [05: Provider Specifications](provider_specifications.md)
