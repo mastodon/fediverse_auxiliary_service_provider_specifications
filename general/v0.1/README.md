@@ -29,3 +29,9 @@ software instance.
 * [05: Provider Specification](provider_specification.md)
 
   Describes the common requirements for all provider specifications.
+
+## OpenAPI
+
+There is an experimental
+[OpenAPI specification file](provider_openapi.yml) included with this
+specification.
