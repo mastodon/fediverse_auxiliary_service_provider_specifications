@@ -28,12 +28,12 @@ Description:
 
 ### Provider API Endpoints
 
-The provider allows an instance to make a HTTP `POST` call to `/debug`.
+The provider allows an instance to make a HTTP `POST` call to `/debug/log`.
 
 Example call:
 
 ```http
-POST /debug
+POST /debug/log
 ```
 
 The request body MAY be empty or contain a single JSON object.
@@ -51,12 +51,12 @@ to the instance.
 ### Instance API Endpoints
 
 The instance allows the provider to make a HTTP `POST` call to
-`/debug_callback`.
+`/debug/callback`.
 
 Example call:
 
 ```http
-POST /debug_callback
+POST /debug/callback
 ```
 
 The request body MAY be empty, unless the instance included a JSON
