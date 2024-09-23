@@ -50,6 +50,8 @@ The provider MUST log:
 The provider must then make the API call described in the next section
 to the instance.
 
+The provider MUST return a HTTP status code `201` (Created).
+
 ### Instance API Endpoints
 
 The instance allows the provider to make a HTTP `POST` call to
@@ -77,6 +79,8 @@ The instance SHOULD log:
 This is a strong "SHOULD" but not a "MUST" because skipping this step
 might make the implementation inside the instance's software easier
 while still providing some value.
+
+The instance MUST return a HTTP status code `201` (Created).
 
 ### User Interface Requirements
 

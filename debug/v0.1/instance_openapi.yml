@@ -1,0 +1,52 @@
+openapi: 3.1.0
+info:
+  title: Fediverse Auxiliary Service Providers - Debug Instance API
+  description: |-
+    This describes the API a fediverse instance needs to implement to interface with a "Debug Provider".
+
+    See
+    [the full specification](https://github.com/mastodon/fediverse_auxiliary_service_provider_specifications/tree/main/debug/v0.1)
+    for all the details.
+  version: '0.1'
+externalDocs:
+  description: Fediverse Auxiliary Service Provider Specifications
+  url: https://github.com/mastodon/fediverse_auxiliary_service_provider_specifications
+tags:
+  - name: debug
+    description: Receive a callback from a debug provider when a debug call was made
+    externalDocs:
+      description: Find out more
+      url: https://github.com/mastodon/fediverse_auxiliary_service_provider_specifications/tree/main/debug/v0.1/debug_provider.md 
+paths:
+  /debug/callback:
+    post:
+      tags:
+        - debug
+      summary: Debug callback
+      description: Receive a callback when a debug call was made, including the original payload 
+      operationId: createDebugLog
+      requestBody:
+        description: Optional payload that was part of the original call to the provider
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DebugPayload'
+        required: false
+      responses:
+        '201':
+          description: Successful operation
+      security:
+        - provider_auth:
+          - debug
+components:
+  schemas:
+    DebugPayload:
+      type: object
+  securitySchemes:
+    provider_auth:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: https://provider.example.com/oauth/token
+          scopes:
+            debug: create debug logs
