@@ -30,7 +30,14 @@ administrator. This MAY include but is not limited to the following:
 * URL of the instance(s) to be registered
 * Acceptance of terms of service and/or privacy policy
 
-As the result of the registration, a provider MUST present the instance
+A successful registration results in the provider creating an OAuth 2.0
+application for the instance, including a client identifier (ID) and
+secret. It MUST grant the application all the scopes defined here and in
+the provider specifications of the capabilities the provider advertises
+to the instance (see section [04: Provider Info](provider_info.md)).
+Provider specifications MAY define exceptions to this rule.
+
+After the registration, a provider MUST present the instance
 administrator a registration token that can be copied into the instance.
 
 The registration token is a JSON Web Token (JWT) that MUST includes the
@@ -94,8 +101,6 @@ persist it and initiate an OAuth 2.0 "client credentials" flow to
 obtain an access token. This token can then be used to authenticate
 subsequent API calls.
 
-TODO: Do we define oauth scopes or do we leave this up to implementers?
-
 If authorization was successful the instance MUST create and persist an
 OAuth 2.0 application representing the provider, including a client ID
 and a secret.
@@ -104,6 +109,8 @@ It MUST communicate its base URL, the generated client ID and secret to
 the provider using the client credentials API endpoint.
 
 Example request:
+
+OAuth 2.0 scope: `setup`
 
 ```http
 POST /client_credentials

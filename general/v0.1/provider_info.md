@@ -6,6 +6,8 @@ Every provider must offer a provider info API endpoint that can be queried to ob
 
 This endpoint can be queries using a `GET` call to `/provider_info`.
 
+OAuth 2.0 scope: `setup`
+
 Example call:
 
 ```http
