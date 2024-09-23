@@ -30,7 +30,7 @@ Description:
 
 The provider allows an instance to make a HTTP `POST` call to `/debug/log`.
 
-OAuth 2.0 scope: `write:debug:logs`
+OAuth 2.0 scope: `debug`
 
 Example call:
 
@@ -55,7 +55,7 @@ to the instance.
 The instance allows the provider to make a HTTP `POST` call to
 `/debug/callback`.
 
-OAuth 2.0 scope: `aux:write:debug:logs`
+OAuth 2.0 scope: `aux:debug`
 
 Example call:
 
