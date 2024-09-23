@@ -45,7 +45,7 @@ paths:
           description: Validation exception
       security:
         - provider_auth:
-          - setup:instance 
+          - setup
   /provider_info:
     get:
       tags:
@@ -62,7 +62,7 @@ paths:
                 $ref: '#/components/schemas/ProviderInfo'
       security:
         - provider_auth:
-          - setup:instance 
+          - setup
 components:
   schemas:
     ClientCredentials:
@@ -121,6 +121,5 @@ components:
       flows:
         clientCredentials:
           tokenUrl: https://provider.example.com/oauth/token
-          refreshUrl: https://provider.example.com/oauth/token
           scopes:
-            setup:instance: setup an instance
+            setup: setup an instance
