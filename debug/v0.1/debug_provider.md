@@ -30,6 +30,8 @@ Description:
 
 The provider allows an instance to make a HTTP `POST` call to `/debug/log`.
 
+OAuth 2.0 scope: `write:debug:logs`
+
 Example call:
 
 ```http
@@ -42,7 +44,7 @@ The provider MUST log:
 
 * that the request has been made,
 * at what time it was made,
-* the hostname of the instance that made the request and
+* the IP address of the instance that made the request and
 * if present the JSON object from the request body 
 
 The provider must then make the API call described in the next section
@@ -52,6 +54,8 @@ to the instance.
 
 The instance allows the provider to make a HTTP `POST` call to
 `/debug/callback`.
+
+OAuth 2.0 scope: `aux:write:debug:logs`
 
 Example call:
 
@@ -67,7 +71,7 @@ The instance SHOULD log:
 
 * that the request has been made,
 * at what time it was made,
-* the hostname of the provider that made the request and
+* the IP address of the provider that made the request and
 * if present the JSON object from the request body 
 
 This is a strong "SHOULD" but not a "MUST" because skipping this step
