@@ -24,9 +24,9 @@ Read a more thorough explanation in the [Provider Instance Interaction Specifica
 
 [Provider Instance Interaction](general/v0.1/) specifies the initial setup of the instance and provider relationship and their general interaction. This should be common to all providers and forms the basis for the other specifications below.
 
-### Dummy
+### Debug
 
-The specification of a dummy provider to help with developing provider integration into existing fediverse software.
+The specification of a very basic debug provider to help with developing provider integration into existing fediverse software.
 
 ### Search and Discovery
 
