@@ -11,15 +11,16 @@ software instance.
   Introducing the concept of "Fediverse Auxiliary Service Providers" and
   the basics for this specification.
 
-* [02: Registration](registration.md)
+* [02: Protocol Basics](protocol_basics.md)
+
+  Describes the basic building blocks of the protocol and HTTP
+  interactions between providers and instances that are common to all
+  types of providers.
+
+* [03: Registration](registration.md)
 
   Describes the process of registering an instance with a provider,
   covering both protocol and UX aspects.
-
-* [03: Common HTTP interactions](common_http_interactions.md)
-
-  Describes HTTP interactions between providers and instances that are
-  common to all types of providers.
 
 * [04: Provider info](provider_info.md)
 

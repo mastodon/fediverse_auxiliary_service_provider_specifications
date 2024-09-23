@@ -1,6 +1,6 @@
 # Fediverse Auxiliary Service Providers: Provider-Instance Interaction
 
-## 02: Registration
+## 03: Registration
 
 ### Registering with a Provider
 
@@ -159,4 +159,4 @@ capabilities that it actually supports.
 
 ---
 
-Next: [03: Common HTTP interactions](common_http_interactions.md)
+Next: [04: Provider Info](provider_info.md)
