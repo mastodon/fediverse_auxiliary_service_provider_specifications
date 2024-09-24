@@ -62,8 +62,6 @@ An example payload:
 }
 ```
 
-TODO: Do we want / need to JWT to be signed?
-
 A provider SHOULD offer a way to re-generate the OAuth credentials and
 this token in case it gets lost or an instance needs to be reinstalled
 from scratch.
