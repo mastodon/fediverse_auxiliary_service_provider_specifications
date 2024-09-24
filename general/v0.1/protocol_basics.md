@@ -87,10 +87,6 @@ can try this particular request again.
 Fediverse instance software SHOULD be able to handle these responses and
 respect the `Retry-After` header.
 
-TODO: Should this be a MUST? I worry this might make implementing this a
-lot harder before there even is an example of a provider actually
-imposing any limits.
-
 ---
 
 Next: [03: Registration](registration.md)
