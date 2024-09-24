@@ -87,13 +87,13 @@ The instance MUST return a HTTP status code `201` (Created).
 The provider MUST offer the instance admin a user interface that
 displays the logged information.
 
-TODO Mockup
+![A simple table displaying logged requests with instance URL, IP, a timestamp and the payload](../../images/debug_logs.svg)
 
 The instance MUST provide a button or link to initiate the API call to
 the provider. It SHOULD provide a way for the instance admin to see the
 logged callbacks from the provider.
 
-TODO Mockup
+![A simple provider details view including a button to trigger the debug call and a table with logged callbacks](../../images/debug_provider_details.svg)
 
 ### Data Protection
 
