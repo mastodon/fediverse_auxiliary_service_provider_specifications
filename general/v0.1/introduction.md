@@ -28,8 +28,8 @@ downsides.
 Examples of such tasks are:
 
 * Search and discovery: No single instance has a complete view of the
-  full fediverse, and doing so would be very expansive and result in a lot
-  of duplicated content overall.
+  full fediverse, and if it had, that would be very expensive and result
+  in a lot of duplicated content overall.
 * Link preview generation: All instances fetching a web page to generate
   a link preview once a single post with a link is being federated,
   means the web site gets hammered with a lot of requests in a short
