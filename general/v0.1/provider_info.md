@@ -35,7 +35,9 @@ Example response:
       "version": "1.0"
     }
   ],
-  "sign_in_url": "https://provider.example.com/sign_in"
+  "sign_in_url": "https://provider.example.com/sign_in",
+  "contact_email": "support@provider.example.com",
+  "fediverse_account": "@provider@fedi.example.com"
 }
 ```
 
@@ -68,6 +70,11 @@ The values are defined as follows:
       provider supports.
 * `sign_in_url`: If present it MUST contain a string representing the URL where
   an instance administrator can manually sign in to the provider.
+* `contact_email`: MAY be optionally included to communicate an email
+  address to contact the provider's operator(s).
+* `fediverse_account`: MAY be optionally included to point to a
+  fediverse account that can be followed to receive updates about the
+  provider.
 
 ---
 
