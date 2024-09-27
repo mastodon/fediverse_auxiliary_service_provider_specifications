@@ -8,12 +8,12 @@ When an administrator of a fediverse software decides to start using a
 provider, they have to first register with the provider. Every provider
 might have different requirements when it comes to instance
 registration. Depending on the use case different technical,
-organizatorial or legal requirements may apply. Thus, this document does
+organisational or legal requirements may apply. Thus, this document does
 not impose any hard requirements on that process, except for the end
 result.
 
-A provider SHOULD document the process how to register as an instance
-admin. Even when registration is closed or by invitation only.
+A provider SHOULD document the process an instance admin should use to register.
+Even when registration is closed or by invitation only.
 
 A provider SHOULD list its capabilities and MAY name fediverse software
 that is known to be compatible.
@@ -83,7 +83,7 @@ The option to add a new provider SHOULD be part of the user interface
 for administrative settings that a fediverse software already has.
 
 To add a new provider, the adminstrator MUST enter / paste the
-registration token obtained in the previous step). The instance's
+registration token obtained in the previous step. The instance's
 software MUST validate the token before proceeding.
 
 This validation MUST include:
