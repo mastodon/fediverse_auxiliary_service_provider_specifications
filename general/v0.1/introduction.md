@@ -17,8 +17,8 @@ that can interoperate by using a shared protocol, ActivityPub.
 
 The different sofware offerings have different use cases, e.g.
 micro-blogging or photo sharing, and requirements. Instances, even when
-using the same software, can also differ in many ways (e.g. funding,
-size of administrative / moderation staff etc.).
+using the same software, can also differ in many ways (e.g. number of users,
+funding, size of administrative / moderation staff etc.).
 
 That is why some tasks that are useful to many instances regardless of
 the software used, are either hard or even impossible for a single
@@ -28,14 +28,16 @@ downsides.
 Examples of such tasks are:
 
 * Search and discovery: No single instance has a complete view of the
-  full fediverse.
+  full fediverse, and doing so would be very expansive and result in a lot
+  of duplicated content overall.
 * Link preview generation: All instances fetching a web page to generate
   a link preview once a single post with a link is being federated,
   means the web site gets hammered with a lot of requests in a short
   timeframe.
 * SPAM detection: This is not an easy problem to solve and every single
   Fediverse software having to implement their own solution seems
-  wasteful.
+  wasteful. Also, it really helps to fight this efficiently if you are able
+  to work on data from multiple servers.
 
 Fediverse auxiliary service providers are software services that can
 assist instances in performing one or more of these tasks. An instance
@@ -54,7 +56,7 @@ To learn more about trust and safety related use cases, please refer to
 ### Provider Instance Interaction
 
 Regardless of their exact capabilities, *all* providers have a common
-way of interacting with fediverse instances. This documents aim to
+way of interacting with fediverse instances. This document aims to
 specify these common interactions up to the point where specific
 capabilities can be used. These specific capabilities (search, SPAM
 detection etc.) are the subject of their own respective specifications

@@ -1,6 +1,6 @@
 # Fediverse Auxiliary Service Providers: Provider-Instance Interaction
 
-## 03: Protocol Basics
+## 02: Protocol Basics
 
 This document introduces some basic API endpoints providers and
 instances need to implement. All other endpoints depend on what services

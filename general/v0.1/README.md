@@ -27,7 +27,7 @@ software instance.
   Describes the basics of an API that providers must offer to query
   important metadata about their service.
 
-* [05: Provider Specification](provider_specification.md)
+* [05: Provider Specification](provider_specifications.md)
 
   Describes the common requirements for all provider specifications.
 
