@@ -1,10 +1,10 @@
-# Fediverse Auxiliary Service Providers: Provider-Instance Interaction
+# Fediverse Auxiliary Service Providers: Fediverse Server Interaction
 
-## 04: Provider Info
+## 04: FASP Information
 
-Every provider must offer a provider info API endpoint that can be queried to obtain information about the provider.
+Every FASP must offer a FASP information API endpoint that can be queried to obtain information about the FASP.
 
-This endpoint can be queries using a `GET` call to `/provider_info`.
+This endpoint can be queried using a `GET` call to `/provider_info`.
 
 OAuth 2.0 scope: `setup`
 
@@ -18,10 +18,10 @@ Example response:
 
 ```json
 {
-  "name": "Example provider",
+  "name": "Example FASP",
   "privacy_policy": [
     {
-      "url": "https://provider.example.com/privacy.html",
+      "url": "https://fasp.example.com/privacy.html",
       "language": "en"
     }
   ],
@@ -35,39 +35,39 @@ Example response:
       "version": "1.0"
     }
   ],
-  "sign_in_url": "https://provider.example.com/sign_in"
+  "sign_in_url": "https://fasp.example.com/sign_in"
 }
 ```
 
-The provider info MUST contain the keys `name`, `privacy_policy` and
-`capabilities`. The key `sign_in_url` MUST be present if the provider offers a
-way for an instance administrator to sign in (e.g. to edit settings, show
+The FASP info MUST contain the keys `name`, `privacy_policy` and
+`capabilities`. The key `sign_in_url` MUST be present if the FASP offers a
+way for a fediverse server administrator to sign in (e.g. to edit settings, show
 statistics etc.). Otherwise it MAY be absent.
 
 The values are defined as follows:
 
-* `name`: This MUST be a non-empty string containing the name of this provider.
-  This is the name of this installation of the provider software. It will be
-  displayed to instance administrators and SHOULD be as descriptive as possible
-  for them to identify the provider.
+* `name`: This MUST be a non-empty string containing the name of this FASP.
+  This is the name of this installation of the FASP software. It will be
+  displayed to fediverse server administrators and SHOULD be as descriptive as possible
+  for them to identify the FASP.
 * `privacy_policy`: This MUST be an array. In case the provider does not
   receive any kind of personally identifiable information or other data that
   might be considered sensitive this MAY be empty. Otherwise it MUST contain
   one objects containing the keys `url` and `language` for each language the
   privacy policy is available in:
-    * `url`: URL of the publicly available privacy policy. Instance operators
+    * `url`: URL of the publicly available privacy policy. Fediverse server administrators
       may link to this in their own privacy policy.
-    * `language`: A language code representing the language of the privacy
+    * `language`: An ISO-639-1 language code representing the language of the privacy
       policy.
 * `capabilities`: This MUST be an array including one object for every
-  capability the provider implements. These objects contain the keys `id` and
+  capability the FASP implements. These objects contain the keys `id` and
   `version`:
-    * `id`: This is the identifier of the capability. See provider
+    * `id`: This is the identifier of the capability. See FASP
       specifications for the list of capabilites and their identifiers.
     * `version`: The version of the specification for this capability that this
-      provider supports.
+      FASP supports.
 * `sign_in_url`: If present it MUST contain a string representing the URL where
-  an instance administrator can manually sign in to the provider.
+  a fediverse server administrator can sign in to the FASP.
 
 ---
 
