@@ -53,7 +53,7 @@ The values are defined as follows:
 * `privacy_policy`: This MUST be an array. In case the provider does not
   receive any kind of personally identifiable information or other data that
   might be considered sensitive this MAY be empty. Otherwise it MUST contain
-  one objects containing the keys `url` and `language` for each language the
+  one object containing the keys `url` and `language` for each language the
   privacy policy is available in:
     * `url`: URL of the publicly available privacy policy. Fediverse server administrators
       may link to this in their own privacy policy.
