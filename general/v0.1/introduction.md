@@ -1,4 +1,4 @@
-# Fediverse Auxiliary Service Providers: Provider-Instance Interaction
+# Fediverse Auxiliary Service Providers: Fediverse Server Interaction
 
 ## 01: Introduction
 
@@ -9,56 +9,55 @@ within fediverse server software and how the two communicate.
 
 ### Fediverse Auxiliary Service Providers
 
-The Fediverse is a decentralized network of servers (often
-called "instances") running different software
+The fediverse is a decentralized network of servers running different software
 that can interoperate by using the ActivityPub protocol.
 
 ![Fediverse instances communicating with each other](../../images/instances_federating.svg)
 
 The different sofware offerings have different use cases, e.g.
-micro-blogging or photo sharing, and requirements. Instances, even when
-using the same software, can also differ in many ways (e.g. number of users,
+micro-blogging or photo sharing, and different requirements. Fediverse servers, even when
+using the same software, may differ in many ways (e.g. number of users,
 funding, number of administrative / moderation staff etc.).
 
-Some tasks that are useful to many instances regardless of
+Some tasks that are useful to many fediverse servers regardless of
 the software used are either hard or even impossible for a single
-instance to perform. Or every instance performing that task independently has serious
+instance to perform. Or, every instance performing that task independently has serious
 downsides.
 
 Examples of such tasks are:
 
-* Search and discovery: No single instance has a complete view of the
-  full fediverse, and if it had, that would be very expensive for each instance, and result
+* Search and discovery: No single fediverse server has a complete view of the
+  full network, and if it had, that would be very expensive for each server, and result
   in a lot of duplicated content across the network.
-* Link preview generation: All instances fetching a web page to generate
+* Link preview generation: All fediverse servers fetching a web page to generate
   a link preview once a single post with a link is being federated
   results in the target web site being deluged with requests in a short
   timeframe.
 * SPAM detection: This is not an easy problem to solve and every single
-  Fediverse software having to implement their own solution seems
+  fediverse software having to implement their own solution seems
   wasteful. Also, it really helps to fight this efficiently if able
-  to work on data from multiple servers.
+  to work on data from multiple fediverse servers.
 
-Fediverse auxiliary service providers are software services that can
-assist instances in performing one or more of these tasks. An instance
-administrator can decide to connect to one or more providers, either to
+FASPs are software services that can
+assist fediverse servers in performing one or more of these tasks. A server
+administrator can decide to connect to one or more FASPs, either to
 perform different tasks or to complement each other when performing the
 same task.
 
 ![Fediverse instances using difference auxiliary service providers](../../images/instances_using_providers.svg)
 
-To learn more about seach and discovery related providers, please visit
+To learn more about seach and discovery related FASPs, please visit
 the [website of the "Fediverse Discovery Providers" project](https://fediscovery.org).
 
 To learn more about trust and safety related use cases, please refer to
 [this blog post](https://renchap.com/blog/post/evolving_mastodon_trust_and_safety/).
 
-### Provider Instance Interaction
+### Fediverse Instance Interaction
 
 Regardless of their exact capabilities, *all* FASPs have a common
-way of interacting with fediverse instances. This document
+way of interacting with fediverse servers. This document
 specifies these common interactions up to the point where specific
-capabilities can be used. These specific capabilities (search, SPAM
+capabilities can be used. These specific capabilities (search, spam
 detection etc.) are the subject of their own respective specifications
 which all build on this one.
 
@@ -67,16 +66,16 @@ The common interactions are:
 1. Registration with the FASP
 2. Setup of the FASP within the fediverse software
 3. Display and selection of FASP capabilities
-4. The ability of the fediverse instance to authenticate with the
+4. The ability of the fediverse server to authenticate with the
 FASP and call its APIs
-5. The ability of the FASP to authenticate with the instance and
+5. The ability of the FASP to authenticate with the fediverse server and
 call its APIs
 
-Please note that 4. and 5. are not the same. Some services might not
+Please note that 4. and 5. are not the same. Some interactions might not
 need both directions, but many do. Imagine a search FASP, where the
-instance can perform a search by calling into the FASP (4.), but the
-FASP might also call into the instance to request historic data to
-index (5.). Compute-intensive services might be triggerd by an instance
+fediverse server can perform a search by calling into the FASP (4.), but the
+FASP might also call into the fediverse server to request historic data to
+index (5.). Compute-intensive services might be triggerd by a fediverse server
 (4.) but only call-back later (5.) with the results once the computation
 has finished.
 
