@@ -4,7 +4,7 @@ This repo collects drafts of specifications for "Fediverse Auxiliary Service Pro
 
 ## What are "Fediverse Auxiliary Service Providers"?
 
-Fediverse Auxiliary Service Providers are independent services that can interact with Fediverse instances to provide services that are either not at the core of the Fediverse instance's software or cannot be achieved by a single instance.
+Fediverse Auxiliary Service Providers (FASPs) are independent services that can interact with Fediverse server software to provide services that augment capabilities that are in the server software, are not available in the server software, or cannot be achieved by a single server.
 
 Some examples for these services would be:
 
@@ -22,15 +22,15 @@ Read a more thorough explanation in the [Provider Instance Interaction Specifica
 
 ### General
 
-[Provider Instance Interaction](general/v0.1/) specifies the initial setup of the instance and provider relationship and their general interaction. This should be common to all providers and forms the basis for the other specifications below.
+[Provider Instance Interaction](general/v0.1/) specifies the initial setup of the fediverse server and FASP relationship and their general interactions. This should be common to all FASPs and forms the basis for the other specifications below.
 
 ### Debug
 
-The specification of a very basic debug provider to help with developing provider integration into existing fediverse software.
+The specification of a very basic debug FASP to help with developing FASP integration into existing fediverse software.
 
 ### Search and Discovery
 
-To learn more about the initial plans around search and discovery please visit the [website of the "Fediverse Discovery Provider" project](https://fediscovery.org).
+To learn more about the initial plans for search and discovery please visit the [website of the "Fediverse Discovery Provider" project](https://fediscovery.org).
 
 Specifications:
 
@@ -38,10 +38,10 @@ Specifications:
 
 ## Contributing
 
-We welcome contributions from all Fediverse software implementers.
+We welcome contributions from all fediverse software implementers.
 
 If you find a major problem with one of the specifications, please open an issue.
 
 If you would like to correct spelling, grammar etc., please create a pull request.
 
-If you have questions, plan a larger PR (maybe your own provider specification?) or simply want to discuss anything related to auxiliary service providers, please open a discussion.
+If you have questions, plan a larger PR (maybe your own FASP specification?) or simply want to discuss anything related to auxiliary service providers, please open a discussion.

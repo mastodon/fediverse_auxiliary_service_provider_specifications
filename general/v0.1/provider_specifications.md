@@ -1,32 +1,32 @@
-# Fediverse Auxiliary Service Providers: Provider-Instance Interaction
+# Fediverse Auxiliary Service Providers: Fediverse Server Interaction
 
-## 05: Provider specifications
+## 05: FASP Specifications
 
-All provider specifications MUST be based on this one and MUST NOT
-change any of the requirements stated above.
+All FASP specifications MUST be based on this document and MUST NOT
+change any of the requirements stated.
 
-### Mandatory Contents
+### Mandatory Content
 
-Every specification MUST include the following:
+Every FASP specification MUST include the following:
 
 * A version number (see next section for details)
-* The names and descriptions of the provided capabilities
-* The provider's HTTP API endpoints
-* The HTTP API an instance needs to implement for the provider to use
+* The names and descriptions of the capabilities offered
+* The FASP's HTTP API endpoints
+* The HTTP API an instance needs to implement for the fediverse server to use
   (or a note that none is required)
 * The OAuth 2.0 scopes used
 * A summary of personally identifiable information or other data that
-  might be considered sensitive that a provider may receive
+  might be considered sensitive that a FASP may receive
 
 ### Versioning
 
-Every specification MUST have a version number consisting of a major and
+Every FASP specification MUST have a version number consisting of a major and
 a minor number, delimited by a single `.` (dot).
 
 Any change to a specification that runs the risk of being incompatible
 to existing implementations MUST increase the major version number.
 
-Clarifications, additions of examples etc. that should not impact
+Clarifications, additions of examples etc. that are not expected to impact
 existing implementations SHOULD increase the minor version number.
 
 Formatting changes, spelling and grammar corrections MAY increase the
@@ -34,7 +34,7 @@ minor version number.
 
 ### Capabilities
 
-Every provider specification MUST define at least one capability. It MAY
+Every FASP specification MUST define at least one capability. It MAY
 define more than one capability, but only if the capabilites are
 strongly related.
 
@@ -57,33 +57,33 @@ Examples of capability identifiers:
 * `spam_detection`
 
 For every capability defined, the specification MUST also include a one
-paragraph description in english that can be used by fediverse software
-to explain the capabilities to instance administrators. It MAY include
+paragraph description in English that can be used by fediverse software
+to explain the capabilities to fediverse server administrators. It MAY include
 translations into other languages as well. 
 
 ### OAuth 2.0 Scopes
 
-Provider specifications MUST define the scopes needed to access the
-provider's API endpoints. There SHOULD be at least one scope. Scope
-names MUST begin with the capability identifier to not collide with
-scopes defined in other provider specifications.
+FASP specifications MUST define the scopes needed to access the
+FASP's API endpoints. There SHOULD be at least one scope. Scope
+names MUST begin with the capability identifier so as not to collide with
+scopes defined in other FASP specifications.
 
 In the simplest case, there is exactly one scope and the scope's name is
 the capability identifier. Finer grained scopes MAY be defined and MUST
 use a colon (`:`) character to seperate the capability identifier from
 any additional characters.
 
-Examples scope names on the provider side:
+Examples scope names on the FASP side:
 
 * `debug`
 * `trends`
 * `account_search:write`
 * `media_storage:videos:read`
 
-If a provider specification also defines API endpoint on the instances
+If a FASP specification also defines an API endpoint on the fediverse server
 side then the same rules apply with one addition:
 
-To prevent collisions with existing scope names an instance's fediverse
+To prevent collision with existing scope names fediverse
 software might already use, all scope names MUST be prefixed with
 `aux:`.
 
@@ -92,17 +92,16 @@ Example scope names on the instance side:
 * `aux:debug`
 * `aux:account_search:write`
 
-### Privacy Policy information
+### Privacy Policy Information
 
-Providers may receive personally identifiable information and other data
+FASPs may receive personally identifiable information and other data
 that some people might consider sensitive. This must then become part of
-an instance's privacy policy to inform users of what data is being
-processed and how.
+a fediverse server's privacy policy to inform users of what data is being
+processed, by whom, and how.
 
-Since provider specifications define exactly what data a provider can
+Since FASP specifications define exactly what data the FASP can
 receive, they MUST include a summary noting which of this data is to be
-considered sensitive from a data protection point of view and why it
-needs to be processed by the provider.
+considered sensitive and why it needs to be processed by the FASP.
 
 This summary MUST make it easy to copy this directly into the privacy
-policies of instances.
+policies of fediverse servers.
