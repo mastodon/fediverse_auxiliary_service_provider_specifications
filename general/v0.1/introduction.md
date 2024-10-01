@@ -3,7 +3,7 @@
 ## 01: Introduction
 
 This document introduces the concept of Fediverse Auxiliary Service
-Providers (FASPs), third-party services that fediverse server software can use to
+Providers ("FASPs"), third-party services that fediverse server software can use to
 perform a variety of tasks, and defines the way such FASPs are configured
 within fediverse server software and how the two communicate.
 
@@ -52,7 +52,7 @@ the [website of the "Fediverse Discovery Providers" project](https://fediscovery
 To learn more about trust and safety related use cases, please refer to
 [this blog post](https://renchap.com/blog/post/evolving_mastodon_trust_and_safety/).
 
-### Fediverse Instance Interaction
+### Fediverse Server Interaction
 
 Regardless of their exact capabilities, *all* FASPs have a common
 way of interacting with fediverse servers. This document
