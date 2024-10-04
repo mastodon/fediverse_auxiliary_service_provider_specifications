@@ -1,4 +1,4 @@
-# Fediverse Auxiliary Service Providers: Provider-Instance Interaction
+# Fediverse Auxiliary Service Providers: Fediverse Server Interaction
 
 ## 02: Protocol Basics
 
