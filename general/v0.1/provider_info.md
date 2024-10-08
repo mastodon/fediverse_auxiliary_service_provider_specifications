@@ -35,7 +35,9 @@ Example response:
       "version": "1.0"
     }
   ],
-  "sign_in_url": "https://fasp.example.com/sign_in"
+  "sign_in_url": "https://fasp.example.com/sign_in",
+  "contact_email": "support@fasp.example.com",
+  "fediverse_account": "@fasp@fedi.example.com"
 }
 ```
 
@@ -68,6 +70,11 @@ The values are defined as follows:
       FASP supports.
 * `sign_in_url`: If present it MUST contain a string representing the URL where
   a fediverse server administrator can sign in to the FASP.
+* `contact_email`: MAY be optionally included to communicate an email
+  address to contact the FASP's operator(s).
+* `fediverse_account`: MAY be optionally included to point to a
+  fediverse account that can be followed to receive updates about the
+  FASP.
 
 ---
 
