@@ -6,8 +6,6 @@ Every FASP must offer a FASP information API endpoint that can be queried to obt
 
 This endpoint can be queried using a `GET` call to `/provider_info`.
 
-OAuth 2.0 scope: `setup`
-
 Example call:
 
 ```http

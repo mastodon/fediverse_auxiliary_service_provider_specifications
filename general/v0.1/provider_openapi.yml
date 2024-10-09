@@ -28,8 +28,8 @@ paths:
     post:
       tags:
         - client_credentials
-      summary: Setup an instance
-      description: Create OAuth2.0 application for an instance
+      summary: Setup a fediverse server
+      description: Create client credentials to authenticate against fediverse server
       operationId: createClientCredentials
       requestBody:
         description: Client credentials and base URL  
@@ -44,8 +44,7 @@ paths:
         '422':
           description: Validation exception
       security:
-        - provider_auth:
-          - setup
+        - provider_auth: []
   /provider_info:
     get:
       tags:
@@ -61,8 +60,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ProviderInfo'
       security:
-        - provider_auth:
-          - setup
+        - provider_auth: []
 components:
   schemas:
     ClientCredentials:
@@ -117,9 +115,5 @@ components:
           examples: ["0.1", "1.0", "2.4"]
   securitySchemes:
     provider_auth:
-      type: oauth2
-      flows:
-        clientCredentials:
-          tokenUrl: https://provider.example.com/oauth/token
-          scopes:
-            setup: setup an instance
+      type: http
+      scheme: bearer

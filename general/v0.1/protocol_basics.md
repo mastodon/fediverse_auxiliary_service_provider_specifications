@@ -40,19 +40,18 @@ development environments.
 Registration tokens are JSON Web Tokens (JWT) as defined in
 [RFC-7519](https://datatracker.ietf.org/doc/html/rfc7519).
 
-For authentication and authorization of API calls, FASP and fediverse server
-use the OAuth 2.0 protocol as defined in
-[RFC-6749](https://tool.ietf.org/html/rfc6749.html).
-
 Custom API calls are HTTPS calls sending, if necessary, JSON data
 (`Content-Type: application/json`) and receiving JSON data.
 
-### OAuth2, Authentication and Authorization
+### Authentication
 
 As described in [03: Registration](registration.md) both FASP and
-fediverse server use OAuth 2.0 to authorize API calls. Both MUST obtain a valid
-access token and send this as a "bearer token" in the `Authorization`
-HTTP header with every API call.
+fediverse server exchange secret keys. Each MUST send the respective
+secret key as a "bearer token" in the `Authorization` HTTP header with
+every API call.  This means that the fediverse server MUST include the
+secret key it got from the FASP during the registration when calling the
+FASP's APIs. And the FASP must send the secret key it received from the
+fediverse server when it calls its APIs.
 
 Example header:
 
@@ -60,17 +59,9 @@ Example header:
 Authorization: Bearer SpBr6rheOp891mwWOfT6Pb"
 ```
 
-Both FASP and fediverse server MUST expire access tokens, forcing the other
-side to periodically request a new one.
-
-The OAuth 2.0 endpoint to request an access token MUST reside at the
-path `/oauth/token` that is relative to the base URL as described
-above. Existing fediverse software that already uses
-OAuth 2.0 and wants to add FASP support cannot re-use existing
-routes. This simplifies FASP implementation and
-enables fediverse software implementers to separate their existing OAuth
-2.0 implementation for regular API clients from the FASP API if so
-desired.
+Both sides MUST validate this token and make sure it is the one
+belonging to the other party. If this validation fails the response MUST
+use the HTTP status code `401` (Unauthorized).
 
 ### Rate Limiting
 
