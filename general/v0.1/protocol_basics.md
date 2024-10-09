@@ -47,25 +47,30 @@ Custom API calls are HTTPS calls sending, if necessary, JSON data
 
 As described in [03: Registration](registration.md) both FASP and
 fediverse server exchange client IDs and secret keys. API requests are
-being authenticated by an `Authorization` header with a custom scheme,
-`FASP-HMAC-SHA256`. Included in this header is
+being authenticated by HTTP Message Signatures as defined in [RFC-9421](https://tools.ietf.org/html/rfc9421.html).
 
-* The client ID
-* A UNIX timestamp representing the creation time of the request
-* An HMAC using SHA-256 that authenticates the aforementioned timestamp
-  using the secret key.
+Signatures are HMAC using SHA-256 and cover signature parameters and
+the following derived components:
 
-Example header:
+* `@method`
+* `@target-uri`
+
+The `keyid` parameter MUST include the client ID and the secret key is
+used to generate the signature.
+
+The required signature parameters are `created` and `keyid`.
+
+Example headers:
 
 ```http
-Authorization: FASP-HMAC-SHA256
-id=b2ks6vm8p23w, created=1728467285, signature=e2821f5113f2dbb7a331e2f7b0198a0fd35c419ea1dab65403e63443b3d61685
+Signature-Input: sig1=("@method" "@target-uri"); created=1728467285;
+keyid="b2ks6vm8p23w"
+Signature: sig1=bfa93d587d952c44d16ffaaf4ad6a321acf72fe4b6104493455c2349d3da56db
 ```
 
-The header MUST be verified by checking that the signature actually
-authenticates the given timestamp with the secret key belonging to
-the given ID. It SHOULD be verified that the timestamp is within an
-acceptable range, allowing for time drift between servers.
+The signature MUST be verified by the receiving party. It SHOULD be
+verified that the `created` timestamp is within an acceptable range,
+allowing for time drift between servers.
 
 If this validation fails the response MUST use the HTTP status code
 `401` (Unauthorized).
