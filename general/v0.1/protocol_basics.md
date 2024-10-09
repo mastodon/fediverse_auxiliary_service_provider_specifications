@@ -46,22 +46,29 @@ Custom API calls are HTTPS calls sending, if necessary, JSON data
 ### Authentication
 
 As described in [03: Registration](registration.md) both FASP and
-fediverse server exchange secret keys. Each MUST send the respective
-secret key as a "bearer token" in the `Authorization` HTTP header with
-every API call.  This means that the fediverse server MUST include the
-secret key it got from the FASP during the registration when calling the
-FASP's APIs. And the FASP must send the secret key it received from the
-fediverse server when it calls its APIs.
+fediverse server exchange client IDs and secret keys. API requests are
+being authenticated by an `Authorization` header with a custom scheme,
+`FASP-HMAC-SHA256`. Included in this header is
+
+* The client ID
+* A UNIX timestamp representing the creation time of the request
+* An HMAC using SHA-256 that authenticates the aforementioned timestamp
+  using the secret key.
 
 Example header:
 
 ```http
-Authorization: Bearer SpBr6rheOp891mwWOfT6Pb"
+Authorization: FASP-HMAC-SHA256
+id=b2ks6vm8p23w, created=1728467285, signature=e2821f5113f2dbb7a331e2f7b0198a0fd35c419ea1dab65403e63443b3d61685
 ```
 
-Both sides MUST validate this token and make sure it is the one
-belonging to the other party. If this validation fails the response MUST
-use the HTTP status code `401` (Unauthorized).
+The header MUST be verified by checking that the signature actually
+authenticates the given timestamp with the secret key belonging to
+the given ID. It SHOULD be verified that the timestamp is within an
+acceptable range, allowing for time drift between servers.
+
+If this validation fails the response MUST use the HTTP status code
+`401` (Unauthorized).
 
 ### Rate Limiting
 
