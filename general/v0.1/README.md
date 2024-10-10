@@ -25,7 +25,7 @@ server.
 * [04: Provider info](provider_info.md)
 
   Important metadata that FASPs must offer via API to allow
-  fediverse serervs to query their service.
+  fediverse servers to query their service.
 
 * [05: Provider Specification](provider_specifications.md)
 
