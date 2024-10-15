@@ -40,37 +40,35 @@ development environments.
 Registration tokens are JSON Web Tokens (JWT) as defined in
 [RFC-7519](https://datatracker.ietf.org/doc/html/rfc7519).
 
-For authentication and authorization of API calls, FASP and fediverse server
-use the OAuth 2.0 protocol as defined in
-[RFC-6749](https://tool.ietf.org/html/rfc6749.html).
-
 Custom API calls are HTTPS calls sending, if necessary, JSON data
 (`Content-Type: application/json`) and receiving JSON data.
 
-### OAuth2, Authentication and Authorization
+### Authentication
 
 As described in [03: Registration](registration.md) both FASP and
-fediverse server use OAuth 2.0 to authorize API calls. Both MUST obtain a valid
-access token and send this as a "bearer token" in the `Authorization`
-HTTP header with every API call.
+fediverse server exchange client IDs and secret keys. API requests are
+being authenticated by an `Authorization` header with a custom scheme,
+`FASP-HMAC-SHA256`. Included in this header is
+
+* The client ID
+* A UNIX timestamp representing the creation time of the request
+* An HMAC using SHA-256 that authenticates the aforementioned timestamp
+  using the secret key.
 
 Example header:
 
 ```http
-Authorization: Bearer SpBr6rheOp891mwWOfT6Pb"
+Authorization: FASP-HMAC-SHA256
+id=b2ks6vm8p23w, created=1728467285, signature=e2821f5113f2dbb7a331e2f7b0198a0fd35c419ea1dab65403e63443b3d61685
 ```
 
-Both FASP and fediverse server MUST expire access tokens, forcing the other
-side to periodically request a new one.
+The header MUST be verified by checking that the signature actually
+authenticates the given timestamp with the secret key belonging to
+the given ID. It SHOULD be verified that the timestamp is within an
+acceptable range, allowing for time drift between servers.
 
-The OAuth 2.0 endpoint to request an access token MUST reside at the
-path `/oauth/token` that is relative to the base URL as described
-above. Existing fediverse software that already uses
-OAuth 2.0 and wants to add FASP support cannot re-use existing
-routes. This simplifies FASP implementation and
-enables fediverse software implementers to separate their existing OAuth
-2.0 implementation for regular API clients from the FASP API if so
-desired.
+If this validation fails the response MUST use the HTTP status code
+`401` (Unauthorized).
 
 ### Rate Limiting
 
