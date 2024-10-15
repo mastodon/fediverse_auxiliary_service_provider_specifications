@@ -30,15 +30,13 @@ administrator. This MAY include but is not limited to the following:
 * URL of the fediverse server(s) to be registered
 * Acceptance of terms of service, data processing agreement, and/or privacy policy
 
-A successful registration results in the FASP creating an OAuth 2.0
-application for the fediverse server, including a client identifier (ID) and
-secret. FASP MUST grant the application all the scopes defined here and in
-the FASP specifications of the capabilities the FASP advertises
-to the fediverse server (see section [04: Provider Info](provider_info.md)).
-FASP specifications MAY define exceptions to this rule.
+A successful registration results in the FASP creating a secret key and
+a client identifier (ID) for the fediverse server. The secret key MUST
+be a random number of at least 128 bits encoded using base64.
 
-After registration, FASP MUST present the fediverse server
-administrator a registration token that can be copied into the fediverse server configuration.
+After registration, FASP MUST present the fediverse server administrator
+a registration token that can be copied into the fediverse server
+configuration.
 
 The registration token is a JSON Web Token (JWT) that MUST include the
 registered claims `iss` and `sub` and the private claim `sec`. It MAY
@@ -47,8 +45,8 @@ contain the registered claim `exp`.
 These claims MUST contain the following:
 
 * `iss`: The base URI for API requests to the FASP.
-* `sub`: The OAuth 2.0 client identifier
-* `sec`: The OAuth 2.0 client secret
+* `sub`: The client identifier
+* `sec`: The client secret key
 * `exp`: An optional expiration time
 
 An example payload:
@@ -61,10 +59,6 @@ An example payload:
   "exp": 1726498179
 }
 ```
-
-FASPs SHOULD offer a way to re-generate the OAuth credentials and
-this token in case it gets lost or a fediverse server needs to be reinstalled
-from scratch.
 
 The following is a sketch of how this may look in the abstract:
 
@@ -95,20 +89,15 @@ This validation MUST include:
 ![A bare-bones web form to add a provider with a textarea for the registration token](../../images/add_provider.svg)
 
 After successful submission of this data, the fediverse software MUST
-persist it and initiate an OAuth 2.0 "client credentials" flow to
-obtain an access token. This token can then be used to authenticate
-subsequent API calls.
+persist it.
 
-If authorization was successful the instance MUST create and persist an
-OAuth 2.0 application representing the FASP, including a client ID
-and a secret.
+It MUST then generate a client ID and a secret key for the FASP
+analogous to how the FASP did for the fediverse software.
 
-It MUST communicate its base URL, the generated client ID and secret to
-the FASP using the client credentials API endpoint.
+It MUST communicate its base URL, the generated client ID and secret key
+to the FASP using the client credentials API endpoint.
 
 Example request:
-
-OAuth 2.0 scope: `setup`
 
 ```http
 POST /client_credentials
