@@ -17,10 +17,9 @@ this document are to be interpreted as described in
 [RFC-2119](https://tools.ietf.org/html/rfc2119.html).
 
 All examples and descriptions of API calls include path names that are
-intended to be relative to a given base URL. FASPs announce their base
-URL in their "registration token" and fediverse servers call back with their
-respective base URLs (see section [03: Registration](registration.md)
-for details). For the sake of brevity all examples assume the base URL
+intended to be relative to a given base URL. 
+Base URLs are exchanged during [registration](registration.md).
+For the sake of brevity all examples assume the base URL
 to not contain any paths. Implementations MUST consider the base URL
 and prefix all API paths accordingly if the base URL contains any path
 segments.
@@ -37,40 +36,51 @@ Communication between fediverse server and FASP MUST use HTTPS in production
 or production-like settings. This requirement MAY be relaxed in
 development environments.
 
-Registration tokens are JSON Web Tokens (JWT) as defined in
-[RFC-7519](https://datatracker.ietf.org/doc/html/rfc7519).
-
 Custom API calls are HTTPS calls sending, if necessary, JSON data
 (`Content-Type: application/json`) and receiving JSON data.
+
+### Request Integrity
+
+In order to allow both parties to verify the integrity of message
+contents, all requests MUST contain a `content-digest` HTTP header as
+defined by [RFC-9530](https://tools.ietf.org/html/rfc9530.html).
+
+The hashing algorith used MUST be SHA-256.
 
 ### Authentication
 
 As described in [03: Registration](registration.md) both FASP and
-fediverse server exchange client IDs and secret keys. API requests are
-being authenticated by HTTP Message Signatures as defined in [RFC-9421](https://tools.ietf.org/html/rfc9421.html).
+fediverse server exchange client IDs and public keys. API requests are
+being authenticated by HTTP Message Signatures as defined in
+[RFC-9421](https://tools.ietf.org/html/rfc9421.html).
 
-Signatures are HMAC using SHA-256 and cover signature parameters and
-the following derived components:
+The signature algorithm used is EdDSA Using Curve edwards25519.
+Signatures cover signature parameters, the derived components `@method`
+and `@target-uri` and the HTTP header `content-digest` (see previous
+section).
 
-* `@method`
-* `@target-uri`
-
-The `keyid` parameter MUST include the client ID and the secret key is
-used to generate the signature.
+The `keyid` parameter MUST include the client ID and the corrsponsing
+private key is used to generate the signature.
 
 The required signature parameters are `created` and `keyid`.
 
 Example headers:
 
 ```http
-Signature-Input: sig1=("@method" "@target-uri"); created=1728467285;
+Signature-Input: sig1=("@method" "@target-uri" "content-digest"); created=1728467285;
 keyid="b2ks6vm8p23w"
-Signature: sig1=bfa93d587d952c44d16ffaaf4ad6a321acf72fe4b6104493455c2349d3da56db
+Signature: sig1=:+CcncFjyE+JAuwJO8MOEhRdyfShQz59e9bWDYGN3hoBorVp69k4V2PvS7zJiAoX3QchMlc47sUF4DsptUN+rDQ==:
 ```
 
-The signature MUST be verified by the receiving party. It SHOULD be
-verified that the `created` timestamp is within an acceptable range,
-allowing for time drift between servers.
+The signature MUST be verified by the receiving party using the public
+key belonging to the transmitted client ID (`keyid` parameter).
+
+To ensure the integrity of the request, the derived components `@method`
+and `@target-uri` SHOULD be verified. Additionally the integrity of the
+`content-digest` HTTP header and its validity SHOULD be checked.
+
+It SHOULD be verified that the `created` timestamp is within an
+acceptable range, allowing for time drift between servers.
 
 If this validation fails the response MUST use the HTTP status code
 `401` (Unauthorized).
