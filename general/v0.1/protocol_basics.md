@@ -17,10 +17,10 @@ this document are to be interpreted as described in
 [RFC-2119](https://tools.ietf.org/html/rfc2119.html).
 
 All examples and descriptions of API calls include path names that are
-intended to be relative to a given base URL. 
-Base URLs are exchanged during [registration](registration.md).
-For the sake of brevity all examples assume the base URL
-to not contain any paths. Implementations MUST consider the base URL
+intended to be relative to a given base URL.  Base URLs are discovered /
+exchanged during [registration](registration.md).  For the sake of
+brevity all examples here and in provider specifications assume the base
+URL to not contain any paths. Implementations MUST consider the base URL
 and prefix all API paths accordingly if the base URL contains any path
 segments.
 
@@ -38,6 +38,44 @@ development environments.
 
 Custom API calls are HTTPS calls sending, if necessary, JSON data
 (`Content-Type: application/json`) and receiving JSON data.
+
+### Base URL
+
+As mentioned above both FASP and fediverse software MUST implement the
+API endpoints specified here relative to a base URL of their own
+choosing. This allows existing fediverse software and existing software
+projects that want to add the ability to act as FASP to implement this
+without confliciting with their existing API endpoints.
+
+To make the initial registrations of a FASP with a fediverse server
+easier, fediverse software MUST include their base URL as part of the
+`metadata` of their `nodeinfo` accessible via the `.well-known/nodeinfo`
+endpoint.
+
+
+Example `nodeinfo`:
+
+```json
+{
+  "version": "2.0",
+  "software": {
+    "name": "fediexample",
+    "version": "6.2.7"
+  },
+  "protocols": [
+    "activitypub"
+  ],
+  "services": {
+    "outbound": [],
+    "inbound": []
+  },
+  "openRegistrations": false,
+  "metadata": {
+    "nodeName": "fedi",
+    "faspBaseUrl": "https://fedi.example.com/fasp"
+  }
+}
+```
 
 ### Request Integrity
 
@@ -67,6 +105,7 @@ The required signature parameters are `created` and `keyid`.
 Example headers:
 
 ```http
+Content-Digest: sha-256=:RK/0qy18MlBSVnWgjwz6lZEWjP/lF5HF9bvEF8FabDg=:
 Signature-Input: sig1=("@method" "@target-uri" "content-digest"); created=1728467285;
 keyid="b2ks6vm8p23w"
 Signature: sig1=:+CcncFjyE+JAuwJO8MOEhRdyfShQz59e9bWDYGN3hoBorVp69k4V2PvS7zJiAoX3QchMlc47sUF4DsptUN+rDQ==:

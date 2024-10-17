@@ -30,7 +30,9 @@ administrator. This MAY include but is not limited to the following:
 * Acceptance of terms of service, data processing agreement, and/or privacy policy
 
 As part of the registration process the fediverse server administrator
-MUST provide the base URL for FASP interaction of their server.
+MUST provide the URL of their server. The FASP MUST use this URL to
+discover the base URL for FASP interaction using the
+`.well-known/nodeinfo` mechanism as described in [protocol basics](protocol_basics.md).
 
 A successful registration results in the FASP creating an Ed25519
 keypair and a client identifier (ID) for the fediverse server.
@@ -89,9 +91,12 @@ purposes. The fingerprint is the Base64 encoded SHA-256 hash of the
 public key.
 
 The fediverse server MUST present a list of FASP registration requests
-to the administrator. This list MUST be accessible via the
-`redirectUri` communicated to the FASP and via regular means, i.e. a
-navigation item in the administration area.
+to the administrator. This list MUST be accessible via regular means,
+i.e. a navigation item in the administration area.
+
+The `redirectUri` MAY lead to this list, optionally highlighting or
+expanding the registration in question. Alternatively it MAY lead to
+page that only displays the registration in question.
 
 For each registration request the fediverse server MUST display the
 `name` the FASP sent and the fingerprint of its public key.
