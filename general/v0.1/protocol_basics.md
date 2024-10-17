@@ -59,7 +59,7 @@ Signatures cover signature parameters, the derived components `@method`
 and `@target-uri` and the HTTP header `content-digest` (see previous
 section).
 
-The `keyid` parameter MUST include the client ID and the corrsponsing
+The `keyid` parameter MUST include the client ID and the corresponding 
 private key is used to generate the signature.
 
 The required signature parameters are `created` and `keyid`.
