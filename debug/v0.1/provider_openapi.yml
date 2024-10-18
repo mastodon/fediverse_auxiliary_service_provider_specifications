@@ -36,17 +36,12 @@ paths:
         '201':
           description: Successful operation
       security:
-        - provider_auth:
-          - debug
+        - provider_auth: []
 components:
   schemas:
     DebugPayload:
       type: object
   securitySchemes:
     provider_auth:
-      type: oauth2
-      flows:
-        clientCredentials:
-          tokenUrl: https://provider.example.com/oauth/token
-          scopes:
-            debug: create debug logs
+      type: http
+      scheme: bearer
