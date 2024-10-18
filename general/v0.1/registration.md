@@ -35,7 +35,7 @@ discover the base URL for FASP interaction using the
 `.well-known/nodeinfo` mechanism as described in [protocol basics](protocol_basics.md).
 
 A successful registration results in the FASP creating an Ed25519
-keypair and a client identifier (ID) for the fediverse server.
+keypair and an unique identifier (ID) for the fediverse server.
 
 After registration, FASP MUST make an HTTP `POST` request to the
 fediverse server's `/registration` endpoint.
@@ -46,7 +46,7 @@ values:
 * `name`: The name of the FASP - this MUST have been presented to the
   administrator during registration to make it recognizable.
 * `baseUrl`: The base URL of the FASP
-* `clientId`: The client ID
+* `serverId`: The identifier for the server that the FASP generated
 * `publicKey`: The public key of the FASP
 
 An example payload:
@@ -55,36 +55,37 @@ An example payload:
 {
   "name": "Example FASP",
   "baseUrl": "https://fasp.example.com",
-  "clientId": "b2ks6vm8p23w",
+  "serverId": "b2ks6vm8p23w",
   "publicKey": "FbUJDVCftINc9FlgRu2jLagCVvOa7I2Myw8aidvkong=" 
 }
 ```
 
 As a result the fediverse server MUST persist this information as a
-request for FASP registration and generate a client ID for the FASP and
+request for FASP registration and generate an unique ID for the FASP and
 its own Ed25519 keypair for authenticating with the FASP. It MUST then
 reply with an HTTP status code `201` (Created) and a JSON object that
 contains the following keys and values:
 
-* `clientId`: The client ID
+* `faspId`: The identifier the server generated for the FASP
 * `publicKey`: The public key of the fediverse server
-* `redirectUri`: An URI to redirect to in order to finish the
+* `registrationCompletionUri`: An URI to redirect to in order to finish the
   registration
 
 An example payload:
 
 ```json
 {
-  "clientId": "dfkl3msw6ps3",
+  "faspId": "dfkl3msw6ps3",
   "publicKey": "KvVQVgD4/WcdgbUDWH7EVaYX9W7Jz5fGWt+Wg8h+YvI=",
-  "redirectUri": "https://fedi.example.com/admin/fasps"
+  "registrationCompletionUri": "https://fedi.example.com/admin/fasps"
 }
 ```
 
 The FASP MUST persist this data and present the administrator with a
 page that explains how to finish the registration on their server.
 
-To that end it MAY present a link to the `redirectUri` it received.
+To that end it MAY present a link to the `registrationCompletionUri` it
+received.
 
 It MUST display a fingerprint of the FASP's public key for comparison
 purposes. The fingerprint is the Base64 encoded SHA-256 hash of the
@@ -94,9 +95,9 @@ The fediverse server MUST present a list of FASP registration requests
 to the administrator. This list MUST be accessible via regular means,
 i.e. a navigation item in the administration area.
 
-The `redirectUri` MAY lead to this list, optionally highlighting or
-expanding the registration in question. Alternatively it MAY lead to
-page that only displays the registration in question.
+The `registrationCompletionUri` MAY lead to this list, optionally highlighting
+or expanding the registration in question. Alternatively it MAY lead to page
+that only displays the registration in question.
 
 For each registration request the fediverse server MUST display the
 `name` the FASP sent and the fingerprint of its public key.

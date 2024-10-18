@@ -88,17 +88,20 @@ The hashing algorith used MUST be SHA-256.
 ### Authentication
 
 As described in [03: Registration](registration.md) both FASP and
-fediverse server exchange client IDs and public keys. API requests are
-being authenticated by HTTP Message Signatures as defined in
+fediverse server generate a unique public/private keypair and exchange
+the public keys and an associated identifier with each other.
+
+API requests are being authenticated by HTTP Message Signatures as defined in
 [RFC-9421](https://tools.ietf.org/html/rfc9421.html).
 
-The signature algorithm used is EdDSA Using Curve edwards25519.
+The signature algorithm used is "EdDSA Using Curve edwards25519".
 Signatures cover signature parameters, the derived components `@method`
 and `@target-uri` and the HTTP header `content-digest` (see previous
 section).
 
-The `keyid` parameter MUST include the client ID and the corresponding 
-private key is used to generate the signature.
+When signing requests, the `keyid` parameter MUST be the identifier
+exchanged during registration, so the other side can infer the
+corresponding public key.
 
 The required signature parameters are `created` and `keyid`.
 
@@ -112,7 +115,7 @@ Signature: sig1=:+CcncFjyE+JAuwJO8MOEhRdyfShQz59e9bWDYGN3hoBorVp69k4V2PvS7zJiAoX
 ```
 
 The signature MUST be verified by the receiving party using the public
-key belonging to the transmitted client ID (`keyid` parameter).
+key belonging to the transmitted identifier (`keyid` parameter).
 
 To ensure the integrity of the request, the derived components `@method`
 and `@target-uri` SHOULD be verified. Additionally the integrity of the
