@@ -56,7 +56,7 @@ An example payload:
   "name": "Example FASP",
   "baseUrl": "https://fasp.example.com",
   "serverId": "b2ks6vm8p23w",
-  "publicKey": "FbUJDVCftINc9FlgRu2jLagCVvOa7I2Myw8aidvkong=" 
+  "publicKey": "FbUJDVCftINc9FlgRu2jLagCVvOa7I2Myw8aidvkong="
 }
 ```
 
@@ -126,10 +126,9 @@ deny the request.](../../images/fasp_registration_requests.svg)
 
 ### Selecting Capabilities
 
-FASPs might implement any number of 
-specificatons. As a last step in the setup process the
-fediverse server administrator needs to select which capabilities of the
-FASP they want to use.
+FASPs might implement any number of specificatons. As a last step in the
+setup process the fediverse server administrator needs to select which
+capabilities of the FASP they want to use.
 
 In order to display available capabilities the fediverse server MUST
 call the FASP info API endpoint (see
@@ -139,7 +138,7 @@ The response includes a list of capability identifiers (see
 [05: Provider Specification](provider_specifications.md) for details)
 and supported version numbers.
 
-The fediverse software MUST present the administrator with the 
+The fediverse software MUST present the administrator with the
 capabilities that the FASP supports.
 
 ![A web form on the instance that allows to select capabilities that both parties support](../../images/select_capabilities.svg)

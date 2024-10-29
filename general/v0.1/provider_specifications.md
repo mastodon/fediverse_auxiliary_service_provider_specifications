@@ -58,7 +58,7 @@ Examples of capability identifiers:
 For every capability defined, the specification MUST also include a one
 paragraph description in English that can be used by fediverse software
 to explain the capabilities to fediverse server administrators. It MAY include
-translations into other languages as well. 
+translations into other languages as well.
 
 ### Privacy Policy Information
 

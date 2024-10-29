@@ -3,7 +3,7 @@ info:
   title: Fediverse Auxiliary Service Providers - General provider API
   description: |-
     This file describes the basic API every "Fediverse Auxiliary
-    Service Provider" needs to provider.
+    Service Provider" needs to provide.
 
     See
     [the full specification](https://github.com/mastodon/fediverse_auxiliary_service_provider_specifications/tree/main/general/v0.1)
@@ -18,33 +18,7 @@ tags:
     externalDocs:
       description: Find out more
       url: https://github.com/mastodon/fediverse_auxiliary_service_provider_specifications/tree/main/general/v0.1/provider_info.md 
-  - name: client_credentials
-    description: Receive instance information and credentials 
-    externalDocs:
-      description: Find out more
-      url: https://github.com/mastodon/fediverse_auxiliary_service_provider_specifications/tree/main/general/v0.1/registration.md
 paths:
-  /client_credentials:
-    post:
-      tags:
-        - client_credentials
-      summary: Setup a fediverse server
-      description: Create client credentials to authenticate against fediverse server
-      operationId: createClientCredentials
-      requestBody:
-        description: Client credentials and base URL  
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ClientCredentials'
-        required: true
-      responses:
-        '201':
-          description: Successful operation
-        '422':
-          description: Validation exception
-      security:
-        - provider_auth: []
   /provider_info:
     get:
       tags:
@@ -63,19 +37,6 @@ paths:
         - provider_auth: []
 components:
   schemas:
-    ClientCredentials:
-      type: object
-      properties:
-        baseURL:
-          type: string
-          format: uri
-          examples: ["https://instance.example.com"]
-        clientId:
-          type: string 
-          examples: ["kOP2Bc7oP31zM"]
-        clientSecret:
-          type: string
-          examples: ["pl5z4ciwfEP194MwWziP"]
     ProviderInfo:
       type: object
       properties:
@@ -116,4 +77,5 @@ components:
   securitySchemes:
     provider_auth:
       type: http
-      scheme: bearer
+      scheme: signature
+      description: "HTTP Message Signatures based authentication as described in https://github.com/mastodon/fediverse_auxiliary_service_provider_specifications/blob/main/general/v0.1/protocol_basics.md" 
