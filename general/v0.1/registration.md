@@ -27,119 +27,108 @@ administrator. This MAY include but is not limited to the following:
 * Email address and/or other contact data of the adminstrator
 * A password of other means of authentication, so the administrator can
   sign-in again later
-* URL of the fediverse server(s) to be registered
 * Acceptance of terms of service, data processing agreement, and/or privacy policy
 
-A successful registration results in the FASP creating an OAuth 2.0
-application for the fediverse server, including a client identifier (ID) and
-secret. FASP MUST grant the application all the scopes defined here and in
-the FASP specifications of the capabilities the FASP advertises
-to the fediverse server (see section [04: Provider Info](provider_info.md)).
-FASP specifications MAY define exceptions to this rule.
+As part of the registration process the fediverse server administrator
+MUST provide the URL of their server. The FASP MUST use this URL to
+discover the base URL for FASP interaction using the
+`.well-known/nodeinfo` mechanism as described in [protocol basics](protocol_basics.md).
 
-After registration, FASP MUST present the fediverse server
-administrator a registration token that can be copied into the fediverse server configuration.
+A successful registration results in the FASP creating an Ed25519
+keypair and an unique identifier (ID) for the fediverse server.
 
-The registration token is a JSON Web Token (JWT) that MUST include the
-registered claims `iss` and `sub` and the private claim `sec`. It MAY
-contain the registered claim `exp`.
+After registration, FASP MUST make an HTTP `POST` request to the
+fediverse server's `/registration` endpoint.
 
-These claims MUST contain the following:
+The payload of that request is a JSON object with the following keys and
+values:
 
-* `iss`: The base URI for API requests to the FASP.
-* `sub`: The OAuth 2.0 client identifier
-* `sec`: The OAuth 2.0 client secret
-* `exp`: An optional expiration time
+* `name`: The name of the FASP - this MUST have been presented to the
+  administrator during registration to make it recognizable.
+* `baseUrl`: The base URL of the FASP
+* `serverId`: The identifier for the server that the FASP generated
+* `publicKey`: The public key of the FASP
 
 An example payload:
 
 ```
 {
-  "iss": "https://fasp.example.com",
-  "sub": "b2ks6vm8p23w",
-  "sec": "H4bo9pER2Ww4MlPs2Rf",
-  "exp": 1726498179
+  "name": "Example FASP",
+  "baseUrl": "https://fasp.example.com",
+  "serverId": "b2ks6vm8p23w",
+  "publicKey": "FbUJDVCftINc9FlgRu2jLagCVvOa7I2Myw8aidvkong="
 }
 ```
 
-FASPs SHOULD offer a way to re-generate the OAuth credentials and
-this token in case it gets lost or a fediverse server needs to be reinstalled
-from scratch.
+As a result the fediverse server MUST persist this information as a
+request for FASP registration and generate an unique ID for the FASP and
+its own Ed25519 keypair for authenticating with the FASP. It MUST then
+reply with an HTTP status code `201` (Created) and a JSON object that
+contains the following keys and values:
+
+* `faspId`: The identifier the server generated for the FASP
+* `publicKey`: The public key of the fediverse server
+* `registrationCompletionUri`: An URI to redirect to in order to finish the
+  registration
+
+An example payload:
+
+```json
+{
+  "faspId": "dfkl3msw6ps3",
+  "publicKey": "KvVQVgD4/WcdgbUDWH7EVaYX9W7Jz5fGWt+Wg8h+YvI=",
+  "registrationCompletionUri": "https://fedi.example.com/admin/fasps"
+}
+```
+
+The FASP MUST persist this data and present the administrator with a
+page that explains how to finish the registration on their server.
+
+To that end it MAY present a link to the `registrationCompletionUri` it
+received.
+
+It MUST display a fingerprint of the FASP's public key for comparison
+purposes. The fingerprint is the Base64 encoded SHA-256 hash of the
+public key.
+
+The fediverse server MUST present a list of FASP registration requests
+to the administrator. This list MUST be accessible via regular means,
+i.e. a navigation item in the administration area.
+
+The `registrationCompletionUri` MAY lead to this list, optionally highlighting
+or expanding the registration in question. Alternatively it MAY lead to page
+that only displays the registration in question.
+
+For each registration request the fediverse server MUST display the
+`name` the FASP sent and the fingerprint of its public key.
+
+The administrator MUST be able to either accept or decline a
+registration request.
 
 The following is a sketch of how this may look in the abstract:
 
 Step 1: A fediverse server admin is presented with a registration form
 
-![A bare-bones sign-up form asking for email, instance URL and acceptance of terms of service](../../images/instance_sign_up.svg)
+![A bare-bones sign-up form asking for email, server base URL and acceptance of terms of service](../../images/server_sign_up.svg)
 
-Step 2: Upon successful registration, the registration token is
-displayed
+Step 2: Upon successful registration, the fingerprint of the public key
+and a link / button to the fediverse server is displayed
 
-![A webpage displaying a registration token with a button to copy to clipboard](../../images/instance_sign_up_success.svg)
+![A webpage displaying a public key fingerprint with a button to go to the fediverse server](../../images/server_sign_up_success.svg)
 
-## Adding a FASP to a Fediverse Server
+Step 3: The fediverse servers displays FASP registration requests,
+allows to compare name and fingerprint and then to either accept or deny
+the requests.
 
-The option to add a new FASP SHOULD be part of the user interface
-for administrative settings that a fediverse software already has.
-
-To add a new FASP, the fediverse server adminstrator MUST enter the
-registration token obtained in the previous step. The fediverse
-software MUST validate the token before proceeding.
-
-This validation MUST include:
-
-* Ensuring the presence of the `iss`, `sub` and `sec` claims
-* Ensuring that `iss` is a valid HTTP(S) URI
-* If `exp` is present, ensure the date it represents is not in the past
-
-![A bare-bones web form to add a provider with a textarea for the registration token](../../images/add_provider.svg)
-
-After successful submission of this data, the fediverse software MUST
-persist it and initiate an OAuth 2.0 "client credentials" flow to
-obtain an access token. This token can then be used to authenticate
-subsequent API calls.
-
-If authorization was successful the instance MUST create and persist an
-OAuth 2.0 application representing the FASP, including a client ID
-and a secret.
-
-It MUST communicate its base URL, the generated client ID and secret to
-the FASP using the client credentials API endpoint.
-
-Example request:
-
-OAuth 2.0 scope: `setup`
-
-```http
-POST /client_credentials
-```
-
-Example request body:
-
-```json
-{
-  "baseURL": "https://fediverse-server.example.com",
-  "clientId": "kOP2Bc7oP31zM",
-  "clientSecret": "pl5z4ciwfEP194MwWziP"
-}
-```
-
-The FASP MUST respond with an HTTP status code `201` (Created)  and
-persist the ID, secret and base URL it received.
-
-Until this ID, secret and base URL have been communicated successfully,
-FASP MAY refuse to accept API requests and respond with the HTTP
-status code `424` (Failed Dependency) instead.
-
-Fediverse software SHOULD catch this and retry sending the data in this
-case.
+![A list of FASP registration requests that can be expanded. The one
+expanded entry shows the fingerprint and buttons to either accept or
+deny the request.](../../images/fasp_registration_requests.svg)
 
 ### Selecting Capabilities
 
-FASPs might implement any number of 
-specificatons. As a last step in the setup process the
-fediverse server administrator needs to select which capabilities of the
-FASP they want to use.
+FASPs might implement any number of specificatons. As a last step in the
+setup process the fediverse server administrator needs to select which
+capabilities of the FASP they want to use.
 
 In order to display available capabilities the fediverse server MUST
 call the FASP info API endpoint (see
@@ -149,9 +138,8 @@ The response includes a list of capability identifiers (see
 [05: Provider Specification](provider_specifications.md) for details)
 and supported version numbers.
 
-The fediverse software MUST present the administrator with the 
+The fediverse software MUST present the administrator with the
 capabilities that the FASP supports.
-
 
 ![A web form on the instance that allows to select capabilities that both parties support](../../images/select_capabilities.svg)
 

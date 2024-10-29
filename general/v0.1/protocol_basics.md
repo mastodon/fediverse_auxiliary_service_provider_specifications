@@ -17,11 +17,10 @@ this document are to be interpreted as described in
 [RFC-2119](https://tools.ietf.org/html/rfc2119.html).
 
 All examples and descriptions of API calls include path names that are
-intended to be relative to a given base URL. FASPs announce their base
-URL in their "registration token" and fediverse servers call back with their
-respective base URLs (see section [03: Registration](registration.md)
-for details). For the sake of brevity all examples assume the base URL
-to not contain any paths. Implementations MUST consider the base URL
+intended to be relative to a given base URL.  Base URLs are discovered /
+exchanged during [registration](registration.md).  For the sake of
+brevity all examples here and in provider specifications assume the base
+URL to not contain any paths. Implementations MUST consider the base URL
 and prefix all API paths accordingly if the base URL contains any path
 segments.
 
@@ -37,40 +36,96 @@ Communication between fediverse server and FASP MUST use HTTPS in production
 or production-like settings. This requirement MAY be relaxed in
 development environments.
 
-Registration tokens are JSON Web Tokens (JWT) as defined in
-[RFC-7519](https://datatracker.ietf.org/doc/html/rfc7519).
-
-For authentication and authorization of API calls, FASP and fediverse server
-use the OAuth 2.0 protocol as defined in
-[RFC-6749](https://tool.ietf.org/html/rfc6749.html).
-
 Custom API calls are HTTPS calls sending, if necessary, JSON data
 (`Content-Type: application/json`) and receiving JSON data.
 
-### OAuth2, Authentication and Authorization
+### Base URL
 
-As described in [03: Registration](registration.md) both FASP and
-fediverse server use OAuth 2.0 to authorize API calls. Both MUST obtain a valid
-access token and send this as a "bearer token" in the `Authorization`
-HTTP header with every API call.
+As mentioned above both FASP and fediverse software MUST implement the
+API endpoints specified here relative to a base URL of their own
+choosing. This allows existing fediverse software and existing software
+projects that want to add the ability to act as FASP to implement this
+without confliciting with their existing API endpoints.
 
-Example header:
+To make the initial registrations of a FASP with a fediverse server
+easier, fediverse software MUST include their base URL as part of the
+`metadata` of their `nodeinfo` accessible via the `.well-known/nodeinfo`
+endpoint.
 
-```http
-Authorization: Bearer SpBr6rheOp891mwWOfT6Pb"
+
+Example `nodeinfo`:
+
+```json
+{
+  "version": "2.0",
+  "software": {
+    "name": "fediexample",
+    "version": "6.2.7"
+  },
+  "protocols": [
+    "activitypub"
+  ],
+  "services": {
+    "outbound": [],
+    "inbound": []
+  },
+  "openRegistrations": false,
+  "metadata": {
+    "nodeName": "fedi",
+    "faspBaseUrl": "https://fedi.example.com/fasp"
+  }
+}
 ```
 
-Both FASP and fediverse server MUST expire access tokens, forcing the other
-side to periodically request a new one.
+### Request Integrity
 
-The OAuth 2.0 endpoint to request an access token MUST reside at the
-path `/oauth/token` that is relative to the base URL as described
-above. Existing fediverse software that already uses
-OAuth 2.0 and wants to add FASP support cannot re-use existing
-routes. This simplifies FASP implementation and
-enables fediverse software implementers to separate their existing OAuth
-2.0 implementation for regular API clients from the FASP API if so
-desired.
+In order to allow both parties to verify the integrity of message
+contents, all requests MUST contain a `content-digest` HTTP header as
+defined by [RFC-9530](https://tools.ietf.org/html/rfc9530.html).
+
+The hashing algorith used MUST be SHA-256.
+
+### Authentication
+
+As described in [03: Registration](registration.md) both FASP and
+fediverse server generate a unique public/private keypair and exchange
+the public keys and an associated identifier with each other.
+
+API requests are being authenticated by HTTP Message Signatures as defined in
+[RFC-9421](https://tools.ietf.org/html/rfc9421.html).
+
+The signature algorithm used is "EdDSA Using Curve edwards25519".
+Signatures cover signature parameters, the derived components `@method`
+and `@target-uri` and the HTTP header `content-digest` (see previous
+section).
+
+When signing requests, the `keyid` parameter MUST be the identifier
+exchanged during registration, so the other side can infer the
+corresponding public key.
+
+The required signature parameters are `created` and `keyid`.
+
+Example headers:
+
+```http
+Content-Digest: sha-256=:RK/0qy18MlBSVnWgjwz6lZEWjP/lF5HF9bvEF8FabDg=:
+Signature-Input: sig1=("@method" "@target-uri" "content-digest"); created=1728467285;
+keyid="b2ks6vm8p23w"
+Signature: sig1=:+CcncFjyE+JAuwJO8MOEhRdyfShQz59e9bWDYGN3hoBorVp69k4V2PvS7zJiAoX3QchMlc47sUF4DsptUN+rDQ==:
+```
+
+The signature MUST be verified by the receiving party using the public
+key belonging to the transmitted identifier (`keyid` parameter).
+
+To ensure the integrity of the request, the derived components `@method`
+and `@target-uri` SHOULD be verified. Additionally the integrity of the
+`content-digest` HTTP header and its validity SHOULD be checked.
+
+It SHOULD be verified that the `created` timestamp is within an
+acceptable range, allowing for time drift between servers.
+
+If this validation fails the response MUST use the HTTP status code
+`401` (Unauthorized).
 
 ### Rate Limiting
 

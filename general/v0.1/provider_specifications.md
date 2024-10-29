@@ -14,7 +14,6 @@ Every FASP specification MUST include the following:
 * The FASP's HTTP API endpoints
 * The HTTP API an instance needs to implement for the fediverse server to use
   (or a note that none is required)
-* The OAuth 2.0 scopes used
 * A summary of personally identifiable information or other data that
   might be considered sensitive that a FASP may receive
 
@@ -59,38 +58,7 @@ Examples of capability identifiers:
 For every capability defined, the specification MUST also include a one
 paragraph description in English that can be used by fediverse software
 to explain the capabilities to fediverse server administrators. It MAY include
-translations into other languages as well. 
-
-### OAuth 2.0 Scopes
-
-FASP specifications MUST define the scopes needed to access the
-FASP's API endpoints. There SHOULD be at least one scope. Scope
-names MUST begin with the capability identifier so as not to collide with
-scopes defined in other FASP specifications.
-
-In the simplest case, there is exactly one scope and the scope's name is
-the capability identifier. Finer grained scopes MAY be defined and MUST
-use a colon (`:`) character to seperate the capability identifier from
-any additional characters.
-
-Examples scope names on the FASP side:
-
-* `debug`
-* `trends`
-* `account_search:write`
-* `media_storage:videos:read`
-
-If a FASP specification also defines an API endpoint on the fediverse server
-side then the same rules apply with one addition:
-
-To prevent collision with existing scope names fediverse
-software might already use, all scope names MUST be prefixed with
-`aux:`.
-
-Example scope names on the instance side:
-
-* `aux:debug`
-* `aux:account_search:write`
+translations into other languages as well.
 
 ### Privacy Policy Information
 

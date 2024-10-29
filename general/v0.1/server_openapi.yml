@@ -1,0 +1,79 @@
+openapi: 3.1.0
+info:
+  title: Fediverse Auxiliary Service Providers - General fediverse server API
+  description: |-
+    This file describes the basic API every fediverse server that wants
+    to interface with "Fediverse Auxiliary Service Provider" needs to
+    provide.
+
+    See
+    [the full specification](https://github.com/mastodon/fediverse_auxiliary_service_provider_specifications/tree/main/general/v0.1)
+    for all the details.
+  version: '0.1'
+externalDocs:
+  description: Fediverse Auxiliary Service Provider Specifications
+  url: https://github.com/mastodon/fediverse_auxiliary_service_provider_specifications
+tags:
+  - name: provider_registration
+    description: FASP registration with the fediverse server
+    externalDocs:
+      description: Find out more
+      url: https://github.com/mastodon/fediverse_auxiliary_service_provider_specifications/tree/main/general/v0.1/registration.md
+paths:
+  /registration:
+    post:
+      tags:
+        - provider_registration
+      summary: Provider registration
+      description: Endpoint for a FASP to send registration information as part of the registration process between FASP and fediverse server.
+      operationId: createRegistration
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProviderRegistrationInfo'
+      responses:
+        '201':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerRegistrationInfo'
+      security:
+        - provider_auth: []
+components:
+  schemas:
+    ProviderRegistrationInfo:
+      type: object
+      properties:
+        name:
+          type: string
+          examples: ["Example FASP"]
+        baseUrl:
+          type: string
+          format: url
+          examples: ["https://fasp.example.com/subdir/"]
+        serverId:
+          type: string
+          examples: ["b2ks6vm8p23w", "admin@fediverse-server.example.com"]
+        publicKey:
+          type: string
+          examples: ["FbUJDVCftINc9FlgRu2jLagCVvOa7I2Myw8aidvkong="]
+    ServerRegistrationInfo:
+      type: object
+      properties:
+        faspId:
+          type: string
+          examples: ["dfkl3msw6ps3", "example-fasp"]
+        publicKey:
+          type: string
+          examples: ["KvVQVgD4/WcdgbUDWH7EVaYX9W7Jz5fGWt+Wg8h+YvI="]
+        registrationCompletionUri:
+          type: string
+          format: url
+          examples: ["https://fedi.example.com/admin/fasps"]
+  securitySchemes:
+    provider_auth:
+      type: http
+      scheme: signature
+      description: "HTTP Message Signatures based authentication as described in https://github.com/mastodon/fediverse_auxiliary_service_provider_specifications/blob/main/general/v0.1/protocol_basics.md"

@@ -33,6 +33,6 @@ server.
 
 ## OpenAPI
 
-There is an experimental
-[OpenAPI specification file](provider_openapi.yml) included with this
-specification.
+There are two experimental OpenAPI specification files,
+[FASP API](provider_openapi.yml) and [Server API](server_openapi.yml),
+included with this specification.
