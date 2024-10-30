@@ -134,10 +134,12 @@ resource intensive. These rate limits are not part of a FASP
 specification as they may differ between implementations or even
 between installations.
 
-If rate limits are imposed, FASP MUST return the HTTP status code `429` (Too Many
-Requests) on rate-limited responses and provide a `Retry-After` HTTP
-header with the number of seconds the fediverse server needs to wait before it
-can retry this particular request.
+If rate limits are imposed, FASP MUST return the HTTP status code `429`
+(Too Many Requests) on rate-limited responses and provide a
+`Retry-After` HTTP header (as defined by
+[RFC-9110](https://tools.ietf.org/html/rfc9110.html)) with the number of
+seconds the fediverse server needs to wait before it can retry this
+particular request.
 
 Fediverse server software SHOULD be able to handle these responses and
 respect the `Retry-After` header.
