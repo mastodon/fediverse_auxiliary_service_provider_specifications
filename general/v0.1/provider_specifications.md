@@ -86,19 +86,39 @@ first segment.
 Endpoints relating to a particular capability MUST use the capability
 identifier as the second PATH segment.
 
-For example,a hypothetical `spam_detection` specification could have
+FASP specifications MAY include both API endpoints that are common to
+all capabilities and thus use paths that are only prefixed with the
+specification identifier and API endpoints specific to one capability
+only. These must also include the capability identifier.
+
+For the first case, an overarching functionality used by more than one
+capability, the pattern for paths looks like this:
+
+```
+/<specification identifier>/<descriptive path>
+```
+
+For the second case, functionality belonging to one specific capability,
+the pattern looks like this:
+
+```
+/<specification identifier>/<capability identifier>/<descriptive path>
+```
+
+For example, a hypothetical `spam_detection` specification could have
 different capabilities for classifying different types of content (post
 text, accounts, images etc.) that use a shared vocabulary.
 
-Getting the vocabulary via an endpoint could result in the following
-path:
+Getting the vocabulary via an endpoint would be a common functionality
+not tied to any one of the capabilities and could thus result in the
+following path:
 
 ```
 /spam_detection/vocabulary
 ```
 
-And an endpoint directly related to the `image_classification`
-capability could have the following path:
+And an endpoint that is tied to and only used for the
+`image_classification` capability could have the following path:
 
 ```
 /spam_detection/image_classification/classification
