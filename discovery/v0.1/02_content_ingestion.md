@@ -35,11 +35,11 @@ Both parties MUST use the mechanism described in
 [FEP-5feb](https://codeberg.org/fediverse/fep/src/branch/main/fep/5feb/fep-5feb.md)
 to determine if a creator has opted in to discovery.
 
-### Subscribing To And Receiving New Content
+### Subscribing To, Requesting And Receiving Content
 
 #### Managing Subscriptions (FASP => Fediverse Server)
 
-In order to subscribe to new content, FASPS can subscribe to events
+In order to subscribe to new content, FASPs can subscribe to events
 by making a `POST` call to the `/discovery/event_subscriptions`
 endpoint on the fediverse server.
 
@@ -50,22 +50,22 @@ POST /discovery/event_subscriptions
 ```
 
 The request body MUST contain a JSON object defining what events to
-subscribe to. This object MUST contain the keys `object_type` and
-`event_type`. It MAY contain the keys `max_batch_size` and/or
+subscribe to. This object MUST contain the keys `objectType` and
+`eventType`. It MAY contain the keys `maxBatchSize` and/or
 `threshold`. The keys are defined as follows:
 
-* `object_type`: One of `Account`, `Post`. This is the type of content
-  the FASP would like to receive.
-* `event_type`: One of `new`, `update`, `delete`, `trending`. `new`
-  means the FASP would like to receive all new objects of the given
-  type. `update` means the FASP would like to be notified about updates
-  to objects of the given type. `delete` means the FASP would like to be
-  notified when an object of the given type is deleted. `trending` means
-  that the FASP would like to be notified of objects that had recent
-  interactions.
-* `max_batch_size`: The maximum number of events the FASP would like to
+* `objectType`: One of `Note`, `Article`, `Person`. This is the
+  ActivityStreams object type the FASP is interested in. `Note` and
+  `Article` are the most common types for posts while `Person` is the
+  type for accounts.
+* `subscriptionType`: One of `lifecycle`, `trends`. `lifecycle`
+  means the FASP would like to be notified when new objects of the given
+  type are created, when objects are updated and when objects are
+  deleted. `trends` means that the FASP would like to be notified of
+  objects that had recent interactions.
+* `maxBatchSize`: The maximum number of events the FASP would like to
   receive in a single request. This is optional.
-* `threshold`: If `event_type` is `trending` then this object can be used to
+* `threshold`: If `eventType` is `trending` then this object can be used to
   further specify when the event should be reported. Valid keys for this
   object are:
   * `timeframe`: Number of minutes in which interactions should fire an
@@ -73,14 +73,14 @@ subscribe to. This object MUST contain the keys `object_type` and
   * `shares`: Number of shares in the given timeframe, defaults to `3`
   * `likes`: Number of likes in the given timeframe, defaults to `3`
   * `replies`: Number of replies in the given timeframe, defaults to `3`
-  
+
 Example object:
 
 ```json
 {
-  "object_type": "Post",
-  "event_type": "trending",
-  "max_batch_size": 10,
+  "objectType": "Note",
+  "subscriptionType": "trends",
+  "maxBatchSize": 10,
   "threshold": {
     "timeframe": 15,
     "shares": 3
@@ -96,7 +96,7 @@ Example response object:
 
 ```json
 {
-  "id": 3446
+  "subscriptionId": 3446
 }
 ```
 
@@ -112,85 +112,176 @@ DELETE /discovery/event_subscriptions/3446
 
 The response MUST be an HTTP status code `200` (OK).
 
-#### Sending Events (Fediverse Server => FASP)
+#### Requesting Historic Content (FASP => Fediverse Server)
 
-When an event occurs that a FASP has subscribed to, the fediverse server
-MUST make an HTTP `POST` call to the FASP's `/discovery/events`
-endpoint.
+To request historic content to index a FASP can make an HTTP `POST` call
+to the `/discovery/backfill_requests` endpoint.
 
 Example call:
 
 ```http
-POST /discovery/events
+POST /discovery/backfill_requests
+```
+
+The request body MUST contain a JSON object with the following keys:
+
+* `objectType`: One of `Note`, `Article`, `Person`. This is the
+  ActivityStreams object type the FASP is interested in.
+* `maxCount`: An integer representing the maximum number of objects the
+  FASP would like to receive.
+* `cursor`: Optional. An opaque token received from the fediverse server
+  in a previous request. MUST be used by the fediverse server to
+  determine results that have not already been sent to the FASP.
+
+Example object:
+
+```json
+{
+  "objectType": "Note",
+  "maxCount": 100,
+  "cursor": "1541815103606536472"
+}
+```
+
+The response from the fediverse server MUST include an HTTP status code
+`201` (Created) and a JSON object including the `id` of the generated
+backfill request.
+
+Example response object:
+
+```json
+{
+  "backfillRequestId": 672
+}
+```
+
+#### Sending Content (Fediverse Server => FASP)
+
+Both the occurrence of an event that a FASP has subscribed to and the
+fulfillment of a backfill request, MUST be announced to the FASP by the
+fediverse server with an HTTP `POST` call to the FASP's
+`/discovery/announcements` endpoint.
+
+Example call:
+
+```http
+POST /discovery/announcements
 ```
 
 The request body MUST include a JSON object including the keys
-`event_type`, `object_type` and `object_uris`.
+`source`, `objectType` and `objectUris`.
 
-`event_type` and `object_type` MUST mirror the original subscription.
-`object_uris` is an array of URIs representing the objects.
+* `source` lets the FASP know in reply to which of its request this
+  announcement is sent. It MUST include an object with either a
+  `subscriptionId` or a `backfillRequestId`.
+* `objectType` MUST mirror the object type given in the original
+  subscription or backfill request.
+* `objectUris` is an array of URIs representing the objects.
+* `eventType` MUST be present for events and be one of `new`, `update`,
+  `delete` or `trending`. The first three are for subscriptions to the
+  `lifecycle` type and the latter for the `trends` type.
+  This key MUST NOT be present for responses to backfill requests.
+* `cursor` MAY optionally be present on responses to backfill requests.
+  Its value can be included in a future backfill request to make sure
+  the fediverse server does not send the same object uris again.
 
 Requests MUST include at least one object URI, but the fediverse server
 MAY save requests and batch events together. In that case it MUST
-respect the `max_batch_size` it received with the subscription.
+respect the `maxBatchSize` it received with the subscription.
+
+In case of backfill requests the fediverse server can decide to send the
+requested number of objects in a single request or split it up into
+smaller requests to reduce the load. In that case the optional `cursor`
+MUST only be included with the final request, but only if more data
+would be available.
 
 Example payload:
 
 ```json
 {
-  "event_type": "new",
-  "object_type": "Post",
-  "object_uris": [
+  "source": {
+    "subscriptionId": 58152
+  },
+  "eventType": "new",
+  "objectType": "Note",
+  "objectUris": [
     "https://fediverse-server.example.com/@example/2342",
     "https://fediverse-server.example.com/@other/8726"
   ]
 }
 ```
 
-### Requesting Historic Content (FASP => Fediverse Server)
+#### Retrieving Content From Its Origin (FASP => Wider Fediverse)
 
-To request historic content to index a FASP can make an HTTP `GET` call
-to the `/discovery/posts` and `/discovery/accounts` endpoints.
+As displayed in the sections above, FASP will only receive object URIs
+from connected fediverse servers. They will then need to fetch the
+actual content themselves.
 
-Both behave exactly the same except that the former is for retrieving
-posts and the latter for retrieving accounts.
+To do so, they need to send HTTP `GET` requests to the object URIs with
+an `Accept` header with the `application/ld+json;
+profile="https://www.w3.org/ns/activitystreams"` media type as specified
+by [ActivityPub](https://www.w3.org/TR/activitypub/#retrieving-objects).
 
-Results MUST be paginated in order to not overload both parties. Both
-endpoints MUST support a `per_page` query parameter to control the
-maximum number of objects returned per call.
+These requests MUST be signed. To achieve a maximum of compatibility
+with existing fediverse software, FASP MUST support request signing with
+both "HTTP Message Signatures" as defined by
+[RFC-9421](https://tools.ietf.org/html/rfc9421.html) as well as the
+earlier draft version "HTTP Signatures" as defined by
+[cavage-12](https://datatracker.ietf.org/doc/html/draft-cavage-http-signatures).
 
-Example query:
+To find out which version a given fediverse server supports, FASP should
+implement "double-knocking": They should first attempt a request using
+"HTTP Message Signatures" and if the fediverse server replies with an
+HTTP status code of `401` or `403` make a second attempt with the older
+draft version, "HTTP Signatures".
 
-```http
-GET /posts?per_page=20
-```
+To save on future requests, FASP SHOULD implement a per fediverse server
+cache to save the information which version of the standard was accepted
+and use that one directly when accessing objects the next time. In case
+a server supports the older version, "HTTP Signatures", the newer one
+MUST be retried periodically, i.e. the cache should be invalidated.
 
-The response MUST include an HTTP status code `200` (OK) and at most the
-number of objects specified in the `per_page` parameter. If more objects
-would be available the response MUST include an HTTP `Link` header that
-specifies the URI of the next "page" of objects.
+More information about HTTP signatures and "double-knocking" can be
+found in this report:
+[ActivityPub and HTTP Signatures](https://swicg.github.io/activitypub-http-signature/).
 
-Example header:
+In both protocol versions, FASP MUST act as an "server/instance actor".
+This means that the `keyId` given MUST be a URI that can be used to
+fetch the JSON-LD representation of an ActivityPub Actor that represents
+the FASP. This actor information MUST include the public key that can
+be used to verify the signature.
 
-```http
-Link:
-<https://fediverse-server.example.com/aux/discovery/posts?per_page=20&cursor=68642346437>;
-rel="next"
-```
-
-The response payload contains a JSON object with a single key,
-`object_uris`, that contains an array of object URIs.
-
-Example:
+The URI's path MUST be `/actor` and a minimal JSON response might look
+like this:
 
 ```json
 {
-  "object_uris": [
-    "https://fediverse-server.example.com/@example/2342",
-    "https://fediverse-server.example.com/@other/8726"
-  ]
+  "@context": [
+    "https://www.w3.org/ns/activitystreams",
+    "https://w3id.org/security/v1",
+  ],
+  "id": "<Base URL>/actor",
+  "type": "Application",
+  "publicKey": {
+    "id": "<Base URL>/actor#main-key",
+    "owner": "<Base URL>/actor",
+    "publicKeyPem": "<Public key PEM>"
+  }
 }
 ```
+
+`<Base URL>` MUST be replaced with the base URL of the FASP, `<Public
+key PEM` with its public key used for signing.
+
+FASP MUST include the content shown above in their actor JSON but MAY
+add further information.
+
+Note that the JSON shown above is not a valid ActivityPub actor because
+it is missing an "inbox" and an "outbox". The information contained is enough
+to verify signatures though and it seems preferrable to not confuse
+anyone with "fake" in- and outboxes. But this is subject to change if it
+turns out that fediverse software exists that only accepts fetch
+requests from actors that do have an inbox and an outbox.
 
 ---
 
