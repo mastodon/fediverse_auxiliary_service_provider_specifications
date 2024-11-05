@@ -54,15 +54,14 @@ subscribe to. This object MUST contain the keys `objectType` and
 `eventType`. It MAY contain the keys `maxBatchSize` and/or
 `threshold`. The keys are defined as follows:
 
-* `objectType`: One of `Note`, `Article`, `Person`. This is the
-  ActivityStreams object type the FASP is interested in. `Note` and
-  `Article` are the most common types for posts while `Person` is the
-  type for accounts.
+* `category`: One of `content`, `account`. This is the category of
+  objects the FASP is interested in.
 * `subscriptionType`: One of `lifecycle`, `trends`. `lifecycle`
   means the FASP would like to be notified when new objects of the given
   type are created, when objects are updated and when objects are
   deleted. `trends` means that the FASP would like to be notified of
-  objects that had recent interactions.
+  objects that had recent interactions. `trends` is only applicable if
+  the `category` given is `content`.
 * `maxBatchSize`: The maximum number of events the FASP would like to
   receive in a single request. This is optional.
 * `threshold`: If `eventType` is `trending` then this object can be used to
@@ -78,7 +77,7 @@ Example object:
 
 ```json
 {
-  "objectType": "Note",
+  "category": "content",
   "subscriptionType": "trends",
   "maxBatchSize": 10,
   "threshold": {
@@ -88,9 +87,12 @@ Example object:
 }
 ```
 
-The response from the fediverse server MUST include an HTTP status code
-`201` (Created) and a JSON object including the `id` of the generated
-subscription. The latter can be used to unsubscribe later.
+The fediverse server MUST validate the request. If it is invalid it MUST
+return an HTTP status code `422` (Unprocessable Content).
+
+If it is valid the response from the fediverse server MUST include an
+HTTP status code `201` (Created) and a JSON object including the `id` of
+the generated subscription. The latter can be used to unsubscribe later.
 
 Example response object:
 
@@ -112,7 +114,7 @@ DELETE /discovery/event_subscriptions/3446
 
 The response MUST be an HTTP status code `200` (OK).
 
-#### Requesting Historic Content (FASP => Fediverse Server)
+#### Requesting Historic Content / Backfilling (FASP => Fediverse Server)
 
 To request historic content to index a FASP can make an HTTP `POST` call
 to the `/discovery/backfill_requests` endpoint.
@@ -125,8 +127,8 @@ POST /discovery/backfill_requests
 
 The request body MUST contain a JSON object with the following keys:
 
-* `objectType`: One of `Note`, `Article`, `Person`. This is the
-  ActivityStreams object type the FASP is interested in.
+* `category`: One of `content`, `account`. This is the category
+  of objects the FASP is interested in.
 * `maxCount`: An integer representing the maximum number of objects the
   FASP would like to receive.
 * `cursor`: Optional. An opaque token received from the fediverse server
@@ -137,7 +139,7 @@ Example object:
 
 ```json
 {
-  "objectType": "Note",
+  "category": "Note",
   "maxCount": 100,
   "cursor": "1541815103606536472"
 }
@@ -174,7 +176,7 @@ The request body MUST include a JSON object including the keys
 * `source` lets the FASP know in reply to which of its request this
   announcement is sent. It MUST include an object with either a
   `subscriptionId` or a `backfillRequestId`.
-* `objectType` MUST mirror the object type given in the original
+* `category` MUST mirror the category given in the original
   subscription or backfill request.
 * `objectUris` is an array of URIs representing the objects.
 * `eventType` MUST be present for events and be one of `new`, `update`,
@@ -182,8 +184,14 @@ The request body MUST include a JSON object including the keys
   `lifecycle` type and the latter for the `trends` type.
   This key MUST NOT be present for responses to backfill requests.
 * `cursor` MAY optionally be present on responses to backfill requests.
-  Its value can be included in a future backfill request to make sure
-  the fediverse server does not send the same object uris again.
+  If it is string its value can be included in a future backfill request
+  to make sure the fediverse server does not send the same object uris
+  again.  If this is a partial announcement that does not conclude an
+  open backfill request this key MUST be absent.
+* `moreObjectsAvailable` MAY optionally be present on responses to
+  backfill requests. If set to `false` it means that no more objects of
+  this category are available and no future backfill requests should be
+  made.
 
 Requests MUST include at least one object URI, but the fediverse server
 MAY save requests and batch events together. In that case it MUST
