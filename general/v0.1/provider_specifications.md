@@ -55,6 +55,13 @@ existing implementations SHOULD increase the minor version number.
 Formatting changes, spelling and grammar corrections MAY increase the
 minor version number.
 
+If only the details for a single capability change but the specification
+includes several capabilities this means the version number would change
+for all capabilities even for those that remain unchanged. If this
+happens it might be a signal that the capabilities are not closely
+related after all and should be extracted to their own separate
+specifications.
+
 ### Capabilities
 
 Every FASP specification MUST define at least one capability. It MAY
