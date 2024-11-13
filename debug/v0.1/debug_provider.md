@@ -11,9 +11,9 @@ that is meant to ease integration of FASP into fediverse software.
 It is meant to aid in developing provider integrations into existing
 fediverse software and to debug issues with provider setup in general.
 
-### Capabilities
+## Capabilities
 
-#### `callback`
+### `callback`
 
 Capability identifier: `callback`
 
@@ -24,7 +24,7 @@ Description:
 > return. The calls are logged to help debug issues with the
 > provider/instance setup.
 
-##### Provider API Endpoints
+#### Provider API Endpoints
 
 The provider allows an instance to make a HTTP `POST` call to
 `/debug/v0/callback/logs`.
@@ -49,7 +49,7 @@ to the instance.
 
 The provider MUST return a HTTP status code `201` (Created).
 
-##### Instance API Endpoints
+#### Instance API Endpoints
 
 The instance allows the provider to make a HTTP `POST` call to
 `/debug/v0/callback/responses`.
@@ -77,7 +77,7 @@ while still providing some value.
 
 The instance MUST return a HTTP status code `201` (Created).
 
-##### User Interface Requirements
+#### User Interface Requirements
 
 The provider MUST offer the instance admin a user interface that
 displays the logged information.
@@ -90,7 +90,7 @@ logged callbacks from the provider.
 
 ![A simple provider details view including a button to trigger the debug call and a table with logged callbacks](../../images/debug_provider_details.svg)
 
-### Data Protection
+## Data Protection
 
 This provider does not receive any personally identifiable or otherwise
 sensitive information.
