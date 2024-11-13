@@ -6,12 +6,6 @@ The debug provider is a
 [Fediverse Auxiliary Service Provider](../../general/v0.1/)
 that is meant to ease integration of FASP into fediverse software.
 
-It offers capabilities that allow testing general FASP and server
-interaction.
-
-Both the provider and the instance SHOULD log calls to these APIs and
-present this information to the instance administrator.
-
 It is meant to aid in developing provider integrations into existing
 fediverse software and to debug issues with provider setup in general.
 
