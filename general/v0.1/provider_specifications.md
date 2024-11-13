@@ -11,6 +11,7 @@ Every FASP specification MUST include the following:
 
 * An identifier for the specification
 * A version number (see next section for details)
+* Optional specification dependencies
 * The names, identifiers and descriptions of the capabilities offered
 * The FASP's HTTP API endpoints
 * The HTTP API an instance needs to implement for the fediverse server
@@ -62,13 +63,28 @@ happens it might be a signal that the capabilities are not closely
 related after all and should be extracted to their own separate
 specifications.
 
+### Specification Dependencies
+
+Specifications MAY depend on other specifications. Some specifications
+could include shared, overarching APIs that are useful in more than one
+capability. In these cases other dependencies may simply state that they
+depend on this. Dependencies MUST always refer to a specific version of
+another specification.
+
+If a specification declares a dependency on another, implementers MUST
+also implement this other specification.
+
 ### Capabilities
 
-Every FASP specification MUST define at least one capability. It MAY
-define more than one capability, but only if the capabilities are
-strongly related. This is the case for example when all capabilities
-rely on some shared functionality or if an update to the specification
-of one capability is expected to require an update of the other as well.
+Every FASP specification MAY define one or more capabilities.
+Capabilities are units of functionality that a fediverse server admin
+can enable or disable.
+
+If a specification defines more than one capability, the capabilities
+SHOULD be strongly related. This is the case for example when all
+capabilities rely on some shared functionality or if an update to the
+specification of one capability is expected to require an update of the
+other as well.
 
 For every capability defined, the specification MUST include a unique
 identifier. See section "Identifiers" above for more details.
@@ -90,8 +106,11 @@ path from the base URL MAY be omitted.
 All relative paths MUST begin with the specification identifier as the
 first segment.
 
+The second segment MUST be the major version number prefixed with the
+lower-case letter `v`.
+
 Endpoints relating to a particular capability MUST use the capability
-identifier as the second PATH segment.
+identifier as the third path segment.
 
 FASP specifications MAY include both API endpoints that are common to
 all capabilities and thus use paths that are only prefixed with the
@@ -102,14 +121,14 @@ For the first case, an overarching functionality used by more than one
 capability, the pattern for paths looks like this:
 
 ```
-/<specification identifier>/<descriptive path>
+/<specification identifier>/v<major version>/<descriptive path>
 ```
 
 For the second case, functionality belonging to one specific capability,
 the pattern looks like this:
 
 ```
-/<specification identifier>/<capability identifier>/<descriptive path>
+/<specification identifier>/v<major version>/<capability identifier>/<descriptive path>
 ```
 
 For example, a hypothetical `spam_detection` specification could have
@@ -121,14 +140,14 @@ not tied to any one of the capabilities and could thus result in the
 following path:
 
 ```
-/spam_detection/vocabulary
+/spam_detection/v2/vocabulary
 ```
 
 And an endpoint that is tied to and only used for the
 `image_classification` capability could have the following path:
 
 ```
-/spam_detection/image_classification/classification
+/spam_detection/v2/image_classification/classification
 ```
 
 ### Privacy Policy Information

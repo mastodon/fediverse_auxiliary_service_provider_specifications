@@ -46,7 +46,7 @@ same task.
 
 ![Fediverse instances using difference auxiliary service providers](../../images/instances_using_providers.svg)
 
-To learn more about seach and discovery related FASPs, please visit
+To learn more about search and discovery related FASPs, please visit
 the [website of the "Fediverse Discovery Providers" project](https://fediscovery.org).
 
 To learn more about trust and safety related use cases, please refer to
