@@ -2,6 +2,8 @@
 
 ## Overview
 
+Specification identifier: `debug`
+
 The debug provider is a
 [Fediverse Auxiliary Service Provider](../../general/v0.1/)
 that is meant to ease integration of FASP into fediverse software.
@@ -13,7 +15,7 @@ fediverse software and to debug issues with provider setup in general.
 
 #### `callback`
 
-Identifier: `callback`
+Capability identifier: `callback`
 
 Description:
 
