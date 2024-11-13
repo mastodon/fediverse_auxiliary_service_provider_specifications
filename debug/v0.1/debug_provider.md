@@ -50,12 +50,12 @@ The provider MUST return a HTTP status code `201` (Created).
 ##### Instance API Endpoints
 
 The instance allows the provider to make a HTTP `POST` call to
-`/debug/callback`.
+`/debug/v0/callback/responses`.
 
 Example call:
 
 ```http
-POST /debug/callback
+POST /debug/v0/callback/responses
 ```
 
 The request body MAY be empty, unless the instance included a JSON
