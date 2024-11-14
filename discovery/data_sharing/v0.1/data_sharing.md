@@ -1,13 +1,15 @@
-# Fediscovery: Fediverse Discovery Providers
+# "Fediscovery": Data Sharing Specification
 
-## 02: Content Ingestion
+## Overview
+
+Specification identifier: `data_sharing`
 
 In order to be able to present results, discovery providers need to be
 able to request content from connected fediverse servers. Two different
 concerns need to be distinguished: Retrieving new content as it is
 created and retrieving historic content to backfill search indexes.
 
-### Restrictions On Content Being Shared
+## Restrictions On Content Being Shared
 
 A single FASP will never be used by all fediverse servers. To ensure it
 still gets a broad view not limited to a small number of servers,
@@ -35,18 +37,18 @@ Both parties MUST use the mechanism described in
 [FEP-5feb](https://codeberg.org/fediverse/fep/src/branch/main/fep/5feb/fep-5feb.md)
 to determine if a creator has opted in to discovery.
 
-### Subscribing To, Requesting And Receiving Content
+## Subscribing To, Requesting And Receiving Content
 
-#### Managing Subscriptions (FASP => Fediverse Server)
+### Managing Subscriptions (FASP => Fediverse Server)
 
 In order to subscribe to new content, FASPs can subscribe to events
-by making a `POST` call to the `/discovery/event_subscriptions`
+by making a `POST` call to the `/data_sharing/v0/event_subscriptions`
 endpoint on the fediverse server.
 
 Example call:
 
 ```http
-POST /discovery/event_subscriptions
+POST /data_sharing/v0/event_subscriptions
 ```
 
 The request body MUST contain a JSON object defining what events to
@@ -103,26 +105,26 @@ Example response object:
 ```
 
 To unsubscribe the FASP can make an HTTP `DELETE` call to the
-`/discovery/event_subscriptions/:id` endpoint, where `:id` is replaced
+`/data_sharing/v0/event_subscriptions/:id` endpoint, where `:id` is replaced
 with the ID received when the original subscription was created.
 
 Example call:
 
 ```http
-DELETE /discovery/event_subscriptions/3446
+DELETE /data_sharing/v0/event_subscriptions/3446
 ```
 
 The response MUST be an HTTP status code `200` (OK).
 
-#### Requesting Historic Content / Backfilling (FASP => Fediverse Server)
+### Requesting Historic Content / Backfilling (FASP => Fediverse Server)
 
 To request historic content to index a FASP can make an HTTP `POST` call
-to the `/discovery/backfill_requests` endpoint.
+to the `/data_sharing/v0/backfill_requests` endpoint.
 
 Example call:
 
 ```http
-POST /discovery/backfill_requests
+POST /data_sharing/v0/backfill_requests
 ```
 
 The request body MUST contain a JSON object with the following keys:
@@ -139,7 +141,7 @@ Example object:
 
 ```json
 {
-  "category": "Note",
+  "category": "content",
   "maxCount": 100,
   "cursor": "1541815103606536472"
 }
@@ -157,17 +159,17 @@ Example response object:
 }
 ```
 
-#### Sending Content (Fediverse Server => FASP)
+### Sending Content (Fediverse Server => FASP)
 
 Both the occurrence of an event that a FASP has subscribed to and the
 fulfillment of a backfill request, MUST be announced to the FASP by the
 fediverse server with an HTTP `POST` call to the FASP's
-`/discovery/announcements` endpoint.
+`/data_sharing/v0/announcements` endpoint.
 
 Example call:
 
 ```http
-POST /discovery/announcements
+POST /data_sharing/v0/announcements
 ```
 
 The request body MUST include a JSON object including the keys
@@ -219,7 +221,7 @@ Example payload:
 }
 ```
 
-#### Retrieving Content From Its Origin (FASP => Wider Fediverse)
+## Retrieving Content From Its Origin (FASP => Wider Fediverse)
 
 As displayed in the sections above, FASP will only receive object URIs
 from connected fediverse servers. They will then need to fetch the
@@ -290,7 +292,3 @@ to verify signatures though and it seems preferrable to not confuse
 anyone with "fake" in- and outboxes. But this is subject to change if it
 turns out that fediverse software exists that only accepts fetch
 requests from actors that do have an inbox and an outbox.
-
----
-
-Next: [03: Trends](03_trends.md)
