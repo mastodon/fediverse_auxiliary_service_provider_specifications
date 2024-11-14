@@ -37,6 +37,9 @@ Both parties MUST use the mechanism described in
 [FEP-5feb](https://codeberg.org/fediverse/fep/src/branch/main/fep/5feb/fep-5feb.md)
 to determine if a creator has opted in to discovery.
 
+For account data, both parties MUST ensure the `discoverable` flag is
+set to `true`.
+
 ## Subscribing To, Requesting And Receiving Content
 
 ### Managing Subscriptions (FASP => Fediverse Server)
