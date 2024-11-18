@@ -278,18 +278,22 @@ like this:
     "https://www.w3.org/ns/activitystreams",
     "https://w3id.org/security/v1",
   ],
-  "id": "<Base URL>/actor",
+  "id": "https://fasp.example.com/actor",
   "type": "Application",
   "publicKey": {
-    "id": "<Base URL>/actor#main-key",
-    "owner": "<Base URL>/actor",
+    "id": "https://fasp.example.com/actor#main-key",
+    "owner": "https://fasp.example.com/actor",
     "publicKeyPem": "<Public key PEM>"
   }
 }
 ```
 
-`<Base URL>` MUST be replaced with the base URL of the FASP, `<Public
-key PEM` with its public key used for signing.
+`https://fasp.example.com` MUST be replaced with an URL of the actual
+FASP, `<Public key PEM` with its public key used for signing. Note that
+is is *not* one of the private keys used to authenticate with a
+registered fediverse server as defined in [FASP/Fediverse Server
+Interaction](../../general/v0.1/) but part of a separate key pair FASP
+MUST generate for this purpose.
 
 FASP MUST include the content shown above in their actor JSON but MAY
 add further information.
@@ -300,3 +304,11 @@ to verify signatures though and it seems preferrable to not confuse
 anyone with "fake" in- and outboxes. But this is subject to change if it
 turns out that fediverse software exists that only accepts fetch
 requests from actors that do have an inbox and an outbox.
+
+Once indexed or persisted in any way, FASP MUST periodically re-check
+both content and account data. At least once every week FASP MUST
+revalidate that the content / account is still publicly available and
+still allowed to be indexed. If the content has been changed these
+changes MUST be applied in the FASPs data storage as well. If FASP have
+been notified of changes through their subscriptions they MAY suspend
+the periodical check for this object for the next week.
