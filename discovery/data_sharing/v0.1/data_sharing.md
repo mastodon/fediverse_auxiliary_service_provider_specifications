@@ -55,8 +55,8 @@ POST /data_sharing/v0/event_subscriptions
 ```
 
 The request body MUST contain a JSON object defining what events to
-subscribe to. This object MUST contain the keys `objectType` and
-`eventType`. It MAY contain the keys `maxBatchSize` and/or
+subscribe to. This object MUST contain the keys `category` and
+`subscriptionType`. It MAY contain the keys `maxBatchSize` and/or
 `threshold`. The keys are defined as follows:
 
 * `category`: One of `content`, `account`. This is the category of
@@ -117,7 +117,7 @@ Example call:
 DELETE /data_sharing/v0/event_subscriptions/3446
 ```
 
-The response MUST be an HTTP status code `200` (OK).
+The response MUST be an HTTP status code `204` (No Content).
 
 ### Requesting Historic Content / Backfilling (FASP => Fediverse Server)
 
@@ -179,8 +179,10 @@ The request body MUST include a JSON object including the keys
 `source`, `objectType` and `objectUris`.
 
 * `source` lets the FASP know in reply to which of its request this
-  announcement is sent. It MUST include an object with either a
-  `subscriptionId` or a `backfillRequestId`.
+  announcement is sent. It MUST include an object with either the
+  key `subscription` or `backfillRequest`. This in turn MUST include
+  an object with the key `id` containing the identifier of the given
+  source.
 * `category` MUST mirror the category given in the original
   subscription or backfill request.
 * `objectUris` is an array of URIs representing the objects.
@@ -213,7 +215,8 @@ Example payload:
 ```json
 {
   "source": {
-    "subscriptionId": 58152
+    "subscription": {
+      "id": "58152"
   },
   "eventType": "new",
   "objectType": "Note",
