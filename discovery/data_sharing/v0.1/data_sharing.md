@@ -69,7 +69,7 @@ subscribe to. This object MUST contain the keys `category` and
   the `category` given is `content`.
 * `maxBatchSize`: The maximum number of events the FASP would like to
   receive in a single request. This is optional.
-* `threshold`: If `eventType` is `trending` then this object can be used to
+* `threshold`: If `subscriptionType` is `trends` then this object can be used to
   further specify when the event should be reported. Valid keys for this
   object are:
   * `timeframe`: Number of minutes in which interactions should fire an
@@ -103,7 +103,9 @@ Example response object:
 
 ```json
 {
-  "subscriptionId": 3446
+  "subscription": {
+    "id": "3446"
+  }
 }
 ```
 
