@@ -220,8 +220,8 @@ Example payload:
     "subscription": {
       "id": "58152"
   },
+  "category": "content",
   "eventType": "new",
-  "objectType": "Note",
   "objectUris": [
     "https://fediverse-server.example.com/@example/2342",
     "https://fediverse-server.example.com/@other/8726"
