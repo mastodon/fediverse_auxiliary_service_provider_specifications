@@ -2,38 +2,37 @@
 
 ## Overview
 
+Specification identifier: `debug`
+
 The debug provider is a
 [Fediverse Auxiliary Service Provider](../../general/v0.1/)
-that only has a single capability, that includes one API endpoint and
-the ability to call one API endpoint in registered instances.
-
-Both the provider and the instance SHOULD log calls to these APIs and
-present this information to the instance administrator.
+that is meant to ease integration of FASP into fediverse software.
 
 It is meant to aid in developing provider integrations into existing
 fediverse software and to debug issues with provider setup in general.
 
-### Capabilities
+## Capabilities
 
-This provider offers a single capability.
+### `callback`
 
-Identifier: `debug`
+Capability identifier: `callback`
 
 Description:
 
-> The `debug` capability offers a single API endpoint in the provider.
-> When called it makes the provider call an API on the instance in
+> The `callback` capability offers a single API endpoint in the provider.
+> When called it makes the provider call an API on the server in
 > return. The calls are logged to help debug issues with the
 > provider/instance setup.
 
-### Provider API Endpoints
+#### Provider API Endpoints
 
-The provider allows an instance to make a HTTP `POST` call to `/debug/log`.
+The provider allows an instance to make a HTTP `POST` call to
+`/debug/v0/callback/logs`.
 
 Example call:
 
 ```http
-POST /debug/log
+POST /debug/v0/callback/logs
 ```
 
 The request body MAY be empty or contain a single JSON object.
@@ -50,15 +49,15 @@ to the instance.
 
 The provider MUST return a HTTP status code `201` (Created).
 
-### Instance API Endpoints
+#### Instance API Endpoints
 
 The instance allows the provider to make a HTTP `POST` call to
-`/debug/callback`.
+`/debug/v0/callback/responses`.
 
 Example call:
 
 ```http
-POST /debug/callback
+POST /debug/v0/callback/responses
 ```
 
 The request body MAY be empty, unless the instance included a JSON
@@ -78,7 +77,7 @@ while still providing some value.
 
 The instance MUST return a HTTP status code `201` (Created).
 
-### User Interface Requirements
+#### User Interface Requirements
 
 The provider MUST offer the instance admin a user interface that
 displays the logged information.
@@ -91,7 +90,7 @@ logged callbacks from the provider.
 
 ![A simple provider details view including a button to trigger the debug call and a table with logged callbacks](../../images/debug_provider_details.svg)
 
-### Data Protection
+## Data Protection
 
 This provider does not receive any personally identifiable or otherwise
 sensitive information.
