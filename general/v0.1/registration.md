@@ -47,7 +47,7 @@ values:
   administrator during registration to make it recognizable.
 * `baseUrl`: The base URL of the FASP
 * `serverId`: The identifier for the server that the FASP generated
-* `publicKey`: The public key of the FASP
+* `publicKey`: The public key of the FASP, base64 encoded
 
 An example payload:
 
@@ -67,7 +67,7 @@ reply with an HTTP status code `201` (Created) and a JSON object that
 contains the following keys and values:
 
 * `faspId`: The identifier the server generated for the FASP
-* `publicKey`: The public key of the fediverse server
+* `publicKey`: The public key of the fediverse server, base64 encoded
 * `registrationCompletionUri`: An URI to redirect to in order to finish the
   registration
 
