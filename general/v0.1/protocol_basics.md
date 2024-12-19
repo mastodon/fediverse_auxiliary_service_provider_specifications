@@ -127,6 +127,10 @@ acceptable range, allowing for time drift between servers.
 If this validation fails the response MUST use the HTTP status code
 `401` (Unauthorized).
 
+Responses to API requests MUST be signed in the same way, except that
+they MUST use the derived component `@status` and the `content-digest`
+HTTP header to generate the signature base.
+
 ### Rate Limiting
 
 FASPs MAY impose rate limiting on API endpoints, e.g. if the requested capability is
