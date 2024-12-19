@@ -231,6 +231,8 @@ Example payload:
 }
 ```
 
+The response MUST be an HTTP status code `204` (No Content).
+
 ## Retrieving Content From Its Origin (FASP => Wider Fediverse)
 
 As displayed in the sections above, FASP will only receive object URIs
