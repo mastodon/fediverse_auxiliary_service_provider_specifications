@@ -284,6 +284,9 @@ like this:
   ],
   "id": "https://fasp.example.com/actor",
   "type": "Application",
+  "inbox": "https://fasp.example.com/inbox",
+  "outbox": "https://fasp.example.com/outbox",
+  "preferredUsername": "fasp",
   "publicKey": {
     "id": "https://fasp.example.com/actor#main-key",
     "owner": "https://fasp.example.com/actor",
@@ -293,7 +296,7 @@ like this:
 ```
 
 `https://fasp.example.com` MUST be replaced with an URL of the actual
-FASP, `<Public key PEM` with its public key used for signing. Note that
+FASP, `<Public key PEM>` with its public key used for signing. Note that
 is is *not* one of the private keys used to authenticate with a
 registered fediverse server as defined in [FASP/Fediverse Server
 Interaction](../../general/v0.1/) but part of a separate key pair FASP
@@ -302,12 +305,40 @@ MUST generate for this purpose.
 FASP MUST include the content shown above in their actor JSON but MAY
 add further information.
 
-Note that the JSON shown above is not a valid ActivityPub actor because
-it is missing an "inbox" and an "outbox". The information contained is enough
-to verify signatures though and it seems preferrable to not confuse
-anyone with "fake" in- and outboxes. But this is subject to change if it
-turns out that fediverse software exists that only accepts fetch
-requests from actors that do have an inbox and an outbox.
+ActivityPub mandates that an `inbox` and `outbox` URL are present. A
+minimal implementation of an outbox could simply always return an empty
+collection while a minimal inbox could receive but immediately discard
+activities posted to it. Note that fediverse servers might post
+activities to the inbox that could be useful for FASP. But if and how
+these endpoints are implemented in FASP is out of scope for this
+specification.
+
+FASP MUST give a `preferredUsername` as some fediverse servers require
+this. This also means they need to support "WebFinger" lookups for this
+username as defined in
+[RFC-7033](https://datatracker.ietf.org/doc/html/rfc7033).
+
+In the example above this would mean that the FASP would need to respond
+to an HTTP `GET` request to
+`https://fasp.example.com/.well-known/webfinger?resource=acct:fasp@fasp.example.com`
+accepting a `Content-Type` of `application/jrd+json` with something like
+this:
+
+```json
+{
+  "subject": "acct:fasp@fasp.example.com",
+  "aliases": [
+    "https://fasp.example.com/actor"
+  ],
+  "links": [
+    {
+      "rel": "self",
+      "type": "application/activity+json",
+      "href": "https://fasp.example.com/actor"
+    }
+  ]
+}
+```
 
 Once indexed or persisted in any way, FASP MUST periodically re-check
 both content and account data. At least once every week FASP MUST
