@@ -160,7 +160,9 @@ Example response object:
 
 ```json
 {
-  "backfillRequestId": 672
+  "backfillRequest": {
+    "id": "672"
+  }
 }
 ```
 
