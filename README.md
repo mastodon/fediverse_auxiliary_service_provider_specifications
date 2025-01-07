@@ -34,7 +34,7 @@ To learn more about the initial plans for search and discovery please visit the 
 
 Specifications:
 
-* Coming soon 
+* [Data Sharing](discovery/data_sharing/v0.1/data_sharing.md) 
 
 ## Contributing
 
