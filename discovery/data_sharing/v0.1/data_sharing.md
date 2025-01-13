@@ -251,6 +251,7 @@ Example payload:
   "source": {
     "subscription": {
       "id": "58152"
+    }
   },
   "category": "content",
   "eventType": "new",
