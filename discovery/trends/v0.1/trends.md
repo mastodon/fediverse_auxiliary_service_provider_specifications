@@ -112,9 +112,12 @@ parameters:
 * `maxCount`: This MUST be a positive integer specifying the maximum
   number of results that should be returned. If omitted defaults to
   `20`.
-* `language`: An ISO-639 language code to only receive results in or
-  relevant for the specific language. If omitted results can be in or
-  relevant for any language.
+* `language`: A [BCP47](https://tools.ietf.org/html/bcp47) language tag
+  to only receive results in or relevant for the specific language. If
+  omitted results can be in or relevant for any language. FASP MUST
+  perform "basic filtering" as described by
+  [RFC-4647](https://tools.ietf.org/html/rfc4647.html) to determine
+  matching languages.
 
 ### Common Response Attributes 
 
@@ -128,13 +131,12 @@ share the following common keys and values:
   server uses several FASP to query for trends that all run the same
   software, it MUST be possible to merge results according to rank to
   get the correct order.
-* `distribution`: An object with one key per hour requested. The keys
-  are consecutive integers each representing one hour. The first hour
-  requested in chronological order is represented by the number `1`. The
-  value of each key is an integer between 0 and 100 representing how
-  much this result was trending in that hour. This information can
-  optionally be used by fediverse servers to display small diagrams
-  ("sparklines") or arrows marking upward and downward trajectories.
+* `distribution`: An array with one entry per hour requested in
+  chronological order. The entries are integer values between 0 and 100
+  representing how much this result was trending in that hour. This
+  information can optionally be used by fediverse servers to display
+  small diagrams ("sparklines") or arrows marking upward and downward
+  trajectories.
 
 ### Requesting Trending Content
 
@@ -178,29 +180,17 @@ hours:
     {
       "uri": "https://fedi1.example.com/status/23",
       "rank": 100,
-      "distribution": {
-          "1": 80,
-          "2": 90,
-          "3": 100
-      }
+      "distribution": [80, 90, 100]
     },
     {
       "uri": "https://fedi3.example.com/posts/17",
       "rank": 74,
-      "distribution": {
-          "1": 70,
-          "2": 90,
-          "3": 40 
-      }
+      "distribution": [70, 90, 40]
     },
     {
       "uri": "https://fedi2.example.com/users/1/posts/56",
       "rank": 55,
-      "distribution": {
-          "1": 30,
-          "2": 100,
-          "3": 30 
-      }
+      "distribution": [30, 100, 30]
     }
   ]
 }
@@ -251,11 +241,7 @@ hours:
     {
       "name": "#fediscovery",
       "rank": 100,
-      "distribution": {
-          "1": 80,
-          "2": 90,
-          "3": 100
-      },
+      "distribution": [80, 90, 100],
       "examples": [
         "https://fedi1.example.com/status/23",
         "https://fedi3.example.com/posts/17",
@@ -265,11 +251,7 @@ hours:
     {
       "name": "#cats",
       "rank": 72,
-      "distribution": {
-          "1": 33,
-          "2": 81,
-          "3": 70 
-      },
+      "distribution": [33, 81, 70],
       "examples": [
         "https://fedi3.example.com/posts/89",
         "https://fedi1.example.com/status/976",
@@ -324,11 +306,7 @@ hours:
     {
       "url": "https://blog.example.com/posts/23",
       "rank": 100,
-      "distribution": {
-          "1": 80,
-          "2": 90,
-          "3": 100
-      },
+      "distribution": [80, 90, 100],
       "examples": [
         "https://fedi1.example.com/status/23",
         "https://fedi3.example.com/posts/17",
@@ -338,11 +316,7 @@ hours:
     {
       "url": "https://news.example.com/articles/45",
       "rank": 72,
-      "distribution": {
-          "1": 33,
-          "2": 81,
-          "3": 70 
-      },
+      "distribution": [33, 81, 70],
       "examples": [
         "https://fedi3.example.com/posts/89",
         "https://fedi1.example.com/status/976",
