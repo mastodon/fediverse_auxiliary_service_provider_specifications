@@ -106,9 +106,9 @@ parameters:
 
 * `withinLastHours`: This MUST be a positive integer specifying the
   number of hours up to the current time for which to compute trends.
-  The minimum value of `1` means records trending within the last hour,
-  while the allowed maximum of `336` means within the last fortnight.
-  If omitted defaults to `24`.
+  The minimum value of `1` means records trending within the last hour.
+  FASP MUST support values up to `168` (i.e. one week) but MAY allow
+  larger values. If omitted defaults to `24`.
 * `maxCount`: This MUST be a positive integer specifying the maximum
   number of results that should be returned. If omitted defaults to
   `20`.
