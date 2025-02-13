@@ -143,6 +143,38 @@ capabilities that the FASP supports.
 
 ![A web form on the instance that allows to select capabilities that both parties support](../../images/select_capabilities.svg)
 
+When the administrator enables a capability the fediverse server MUST
+notify FASP by making an HTTP `POST` call to the
+`/capabilities/<identifier>/<version>/activation` endpoint.
+`<identifier>` and `<version>` MUST be replaced with the identifier and
+version of the capability.
+
+Example call:
+
+```http
+POST /capabilities/debug/2/activation
+```
+
+FASP MUST respond with an HTTP status code `204` (No Content) if the
+message was successfully received and with an HTTP status code `404`
+(Not Found) if the capability is not known or not supported by this
+FASP.
+
+When an administrator disables a capability that was formerly enabled
+the fediverse server MUST make an HTTP `DELETE` call to the same
+endpoint.
+
+Example call:
+
+```http
+DELETE /capabilities/trends/1/activation
+```
+
+FASP MUST respond with an HTTP status code `204`.
+
+FASP MUST NOT make any calls to a fediverse server's APIs belonging to a
+capability that is not enabled.
+
 ---
 
 Next: [04: Provider Info](provider_info.md)
