@@ -69,7 +69,9 @@ encountered or a normalized version). Fediverse servers SHOULD handle
 them just like they handle these representations in other contexts.
 
 When computing trends however, FASP SHOULD consider normalization to
-minimize the risk of obvious duplicates.
+minimize the risk of obvious duplicates and individual spellings of the
+same hashtag not meeting the threshold of what constitutes a trend,
+while the aggregated numbers clearly would.
 
 For hashtags possible strategies for this besides case-insensitive
 handling of names include "ASCII folding" and using existing character
