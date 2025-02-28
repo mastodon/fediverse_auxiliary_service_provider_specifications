@@ -121,10 +121,10 @@ parameters:
   [RFC-4647](https://tools.ietf.org/html/rfc4647.html) to determine
   matching languages.
 
-### Common Response Attributes 
+### Common Response Attribute
 
 All responses include a list of results. Individual result objects
-share the following common keys and values:
+share the following common key and value:
 
 * `rank`: A positive integer less than or equal `100` representing the
   rank of this result. `100` is the highest rank, meaning "most trending".
@@ -133,12 +133,6 @@ share the following common keys and values:
   server uses several FASP to query for trends that all run the same
   software, it MUST be possible to merge results according to rank to
   get the correct order.
-* `distribution`: An array with one entry per hour requested in
-  chronological order. The entries are integer values between 0 and 100
-  representing how much this result was trending in that hour. This
-  information can optionally be used by fediverse servers to display
-  small diagrams ("sparklines") or arrows marking upward and downward
-  trajectories.
 
 ### Requesting Trending Content
 
@@ -169,7 +163,6 @@ These objects include the following keys:
 
 * `uri`: The URI of the content object.
 * `rank`: See previous section "Common Response Attributes".
-* `distribution`: See previous section "Common Response Attributes".
 
 These objects MUST be sorted by `rank` in descending order.
 
@@ -181,18 +174,15 @@ hours:
   "content": [
     {
       "uri": "https://fedi1.example.com/status/23",
-      "rank": 100,
-      "distribution": [80, 90, 100]
+      "rank": 100
     },
     {
       "uri": "https://fedi3.example.com/posts/17",
-      "rank": 74,
-      "distribution": [70, 90, 40]
+      "rank": 74
     },
     {
       "uri": "https://fedi2.example.com/users/1/posts/56",
-      "rank": 55,
-      "distribution": [30, 100, 30]
+      "rank": 55
     }
   ]
 }
@@ -227,7 +217,6 @@ These objects include the following keys:
 
 * `name`: The name of the hashtag.
 * `rank`: See previous section "Common Response Attributes".
-* `distribution`: See previous section "Common Response Attributes".
 * `examples`: An array of URIs of content that uses the hashtag. See
   section "Availability of Content for Hashtags and Links" above for a
   rationale.
@@ -243,7 +232,6 @@ hours:
     {
       "name": "#fediscovery",
       "rank": 100,
-      "distribution": [80, 90, 100],
       "examples": [
         "https://fedi1.example.com/status/23",
         "https://fedi3.example.com/posts/17",
@@ -253,7 +241,6 @@ hours:
     {
       "name": "#cats",
       "rank": 72,
-      "distribution": [33, 81, 70],
       "examples": [
         "https://fedi3.example.com/posts/89",
         "https://fedi1.example.com/status/976",
@@ -292,7 +279,6 @@ These objects include the following keys:
 
 * `url`: The URL of the link. 
 * `rank`: See previous section "Common Response Attributes".
-* `distribution`: See previous section "Common Response Attributes".
 * `examples`: An array of URIs of content that includes the link. See
   section "Availability of Content for Hashtags and Links" above for a
   rationale.
@@ -308,7 +294,6 @@ hours:
     {
       "url": "https://blog.example.com/posts/23",
       "rank": 100,
-      "distribution": [80, 90, 100],
       "examples": [
         "https://fedi1.example.com/status/23",
         "https://fedi3.example.com/posts/17",
@@ -318,7 +303,6 @@ hours:
     {
       "url": "https://news.example.com/articles/45",
       "rank": 72,
-      "distribution": [33, 81, 70],
       "examples": [
         "https://fedi3.example.com/posts/89",
         "https://fedi1.example.com/status/976",
@@ -328,4 +312,3 @@ hours:
   ]
 }
 ```
-
