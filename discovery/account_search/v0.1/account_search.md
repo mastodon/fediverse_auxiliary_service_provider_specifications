@@ -50,3 +50,21 @@ FASP MUST include an HTTP `Link` header as described in
 [RFC-5988](https://tools.ietf.org/html/rfc5988.html). This header MUST
 include the URL of the next page of results with a relation type (`rel`)
 of `next`.
+
+## Privacy Policy Information
+
+With the API specified above fediverse servers do share any personally
+identifiable or otherwise sensitive information with FASP per se.
+
+But they will probably send search terms entered by actual users of
+their platform to FASP. While these cannot be traced back to the user it
+might still be something worth noting in the privacy policy.
+
+Fediverse server administrators may add something along the lines of
+this to their privacy policy:
+
+> <server> sends search terms entered by users to a third-party search
+> service, <fasp>. This service returns relevant data from the fediverse
+> that <server> uses to improve search results. No user identifier or
+> other PII is shared with <fasp>. <fasp> cannot trace back search terms
+> to the user who entered them.
