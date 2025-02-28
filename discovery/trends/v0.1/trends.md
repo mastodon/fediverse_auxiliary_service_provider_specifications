@@ -312,3 +312,8 @@ hours:
   ]
 }
 ```
+
+## Privacy Policy Information
+
+With the APIs specified above fediverse servers do share any personally
+identifiable or otherwise sensitive information with FASP.
