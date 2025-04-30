@@ -45,3 +45,7 @@ If you find a major problem with one of the specifications, please open an issue
 If you would like to correct spelling, grammar etc., please create a pull request.
 
 If you have questions, plan a larger PR (maybe your own FASP specification?) or simply want to discuss anything related to auxiliary service providers, please open a discussion.
+
+## License
+
+This work is marked with CC0 1.0 Universal
