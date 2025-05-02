@@ -34,6 +34,9 @@ See [the website](https://www.fediscovery.org) for details.
   This describes the `account_search` capability for providers that
   offer search for fediverse accounts.
 
-* Account Recommendation (Coming soon)
+* [Follow Recommendation](follow_recommendation/v0.1/)
+
+  This describes the `follow_recommendation` capability for
+  providers that can recommend accounts to follow.
 
 * Status/Post Search (Tentatively planned) 
