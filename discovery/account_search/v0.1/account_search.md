@@ -53,7 +53,7 @@ of `next`.
 
 ## Privacy Policy Information
 
-With the API specified above fediverse servers do share any personally
+With the API specified above fediverse servers do not share any personally
 identifiable or otherwise sensitive information with FASP per se.
 
 But they will probably send search terms entered by actual users of
