@@ -32,9 +32,7 @@ The specification of a very basic debug FASP to help with developing FASP integr
 
 To learn more about the initial plans for search and discovery please visit the [website of the "Fediverse Discovery Provider" project](https://fediscovery.org).
 
-Specifications:
-
-* [Data Sharing](discovery/data_sharing/v0.1/data_sharing.md) 
+You can find the current list of specifications [here](discovery/README.md).
 
 ## Contributing
 
