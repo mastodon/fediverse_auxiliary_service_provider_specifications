@@ -8,7 +8,7 @@ An important part of discovery is finding people to follow. This
 capability offers a very simple API to search for accounts that have
 opted-in to being disvovered.
 
-## Performing Full-Fext Searches for Accounts
+## Performing Full-Text Searches for Accounts
 
 To perform a full-text search for accounts FASP allow fediverse servers
 to make an HTTP `GET` call to the `/account_search/v0/search` endpoint.
