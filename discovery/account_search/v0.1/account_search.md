@@ -30,7 +30,7 @@ The following parameters can be used:
 Example call to search for "teapot" and request at most 10 results:
 
 ```http
-GET /account_search/v0/search?term=teapot&limit=10
+GET /account_search/v0/search?term=teapot&limit=10&language=en
 ```
 
 If a `term` was present in the request, the response MUST include an
