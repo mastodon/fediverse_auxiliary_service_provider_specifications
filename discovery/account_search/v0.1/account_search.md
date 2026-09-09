@@ -20,11 +20,17 @@ The following parameters can be used:
 * `limit`: This parameter MAY optionally be present to give a positive
   integer number representing the maximum nmber of results FASP should
   return. If omitted this value defaults to `20`.
+* `language`: An optional [BCP47](https://tools.ietf.org/html/bcp47)
+  language tag to only show accounts posting in
+  the specified language. FASP MUST perform "basic filtering" as
+  described by
+  [RFC-4647](https://tools.ietf.org/html/rfc4647.html) to determine
+  matching languages.
 
 Example call to search for "teapot" and request at most 10 results:
 
 ```http
-GET /account_search/v0/search?term=teapot&limit=10
+GET /account_search/v0/search?term=teapot&limit=10&language=en
 ```
 
 If a `term` was present in the request, the response MUST include an
