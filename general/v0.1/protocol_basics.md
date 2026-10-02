@@ -47,33 +47,37 @@ choosing. This allows existing fediverse software and existing software
 projects that want to add the ability to act as FASP to implement this
 without confliciting with their existing API endpoints.
 
-To make the initial registrations of a FASP with a fediverse server
-easier, fediverse software MUST include their base URL as part of the
-`metadata` of their `nodeinfo` accessible via the `.well-known/nodeinfo`
-endpoint.
+To make the initial registrations of a fediverse server with a FASP
+easier, FASP MUST include their base URL in their host metadata in
+`.well-known/host-meta.json` as defined by
+[RFC-6415](https://tools.ietf.org/html/rfc6415.html).
 
+Note that RFC-6415 requires an XML representation, while the JSON one is
+optional. To stay in line with the specification it is recommended to
+offer both, but for the sake of FASP only the JSON one MUST be present.
 
-Example `nodeinfo`:
+The base URL MUST appear as a link with a relationship type (`rel` property)
+of `https://fasp.dev/ns#baseUrl`.
+
+FASP that require manual registration (see [the next
+chapter](registration.md) for details) MUST also include a link that
+points to the registration form and that has a relationship type of
+`https://fasp.dev/ns#manualRegistration`.
+
+Example `host-meta.json`:
 
 ```json
 {
-  "version": "2.0",
-  "software": {
-    "name": "fediexample",
-    "version": "6.2.7"
-  },
-  "protocols": [
-    "activitypub"
-  ],
-  "services": {
-    "outbound": [],
-    "inbound": []
-  },
-  "openRegistrations": false,
-  "metadata": {
-    "nodeName": "fedi",
-    "faspBaseUrl": "https://fedi.example.com/fasp"
-  }
+  "links": [
+    {
+      "href": "https://fasp.example.com/api",
+      "rel": "https://fasp.dev/ns#baseUrl"
+    },
+    {
+      "href": "https://fasp.example.com/sign-up",
+      "rel": "https://fasp.dev/ns#manualRegistration"
+    }
+  ]
 }
 ```
 

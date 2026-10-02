@@ -4,129 +4,199 @@
 
 ### Registering with a FASP
 
-When an administrator of a fediverse server software decides to start using a
-FASP, they MAY be required to register with the provider. Every FASP
-MAY have different requirements when it comes to fediverse server
-registration. Different technical,
-organisational or legal requirements may apply. Thus, this document does
-not impose any hard requirements on that process, except for the end
-result.
+Before fediverse servers can make use of a FASP, they need to register
+with it. Registration consists of an optional manual step, where
+administrators need to sign up, and a fully automated step, where FASP
+and fediverse exchange necessary information.
 
-A FASP SHOULD document the process a fediverse server should use to register,
-even when FASP registration is closed or by invitation only.
+The manual first step is optional. It MAY be required in many cases as
+different technical, organisational or legal requirements may apply. For
+example FASP MAY need to ask contact information from administrators,
+record acceptance of terms of service or even require payment
+information.
 
-A FASP SHOULD list its capabilities and MAY name fediverse software
-that is known to be compatible.
+FASP that do not require any manual interaction during registration MAY
+skip this step and offer only the automated registration.
 
-A FASP MAY provide a web-based form to register. Please see below
-for an example.
+The registration process usually starts on the fediverse server with one
+exception: When manual registration is required, the two steps MAY be
+fully decoupled. This is especially useful in scenarios where
+administrators want to register a large number of servers in bulk, e.g.
+fediverse hosting providers. In these cases, the manual registration can
+be performed just once and the per-server automated registration could
+run without human intervention.
 
-During registration the provider MAY request data from the fediverse server
-administrator. This MAY include but is not limited to the following:
+#### Initiating registration on the fediverse server
 
-* Email address and/or other contact data of the adminstrator
-* A password of other means of authentication, so the administrator can
-  sign-in again later
-* Acceptance of terms of service, data processing agreement, and/or privacy policy
+Fediverse server software MUST offer a way for administrators to enter
+the hostname of a FASP to initiate registration. Fediverse server
+software can then use the `.well-known/host-meta.json` mechanism as
+described in [protocol basics](protocol_basics.md) to get the FASP's
+"base URI" and to see if manual registration is necessary.
 
-As part of the registration process the fediverse server administrator
-MUST provide the URL of their server. The FASP MUST use this URL to
-discover the base URL for FASP interaction using the
-`.well-known/nodeinfo` mechanism as described in [protocol basics](protocol_basics.md).
+It MAY also offer a directory of known FASP to help with discovery.
 
-A successful registration results in the FASP creating an Ed25519
-keypair and an unique identifier (ID) for the fediverse server.
+#### Registration scenarios
 
-After registration, FASP MUST make an HTTP `POST` request to the
-fediverse server's `/registration` endpoint.
+##### Fully decoupled manual and automatic registrations
+
+This case is especially useful for bulk registrations of servers as
+explained above. Here an administrator can register one or more servers
+with a FASP first, before enabling it on said servers.
+
+The process can start from the administrator user interface of the
+fediverse server, or directly with the FASP.
+
+```mermaid
+sequenceDiagram
+    actor Admin
+    participant FASP
+    Admin->>FASP: Request registration form
+    FASP->>Admin: Present registration form
+    Admin->>FASP: Submit registration form
+    FASP->>Admin: Communicate success/failure
+    Note over Admin,FASP: Proceed with automatic registration
+```
+
+See [Automatic registration only](#automatic-registration-only) below for the second
+part of this process.
+
+##### Integrated manual and automatic registration
+
+When FASP require manual registration and the fediverse server is aware
+of this requirement, it can redirect the administrator to the correct
+URL on the FASP:
+
+```mermaid
+sequenceDiagram
+    actor Admin
+    participant Fedi as Fediverse Server
+    participant FASP
+    Admin->>Fedi: Click on "Enable FASP"
+    Fedi->>Admin: Redirect to FASP registration form
+    Admin->>FASP: Register manually with FASP
+    FASP->>Admin: Redirect to Fediverse Server
+    Admin->>Fedi: Click on "Enable FASP"
+    Fedi->>FASP: POST /registration
+    FASP->>Fedi: Response
+    Fedi->>Admin: Communicate success/failure
+```
+
+When a fediverse server is not aware of the registration requirement,
+FASP can communicate this in their response to an attempted automatic
+registration:
+
+```mermaid
+sequenceDiagram
+    actor Admin
+    participant Fedi as Fediverse Server
+    participant FASP
+    Admin->>Fedi: Click on "Enable FASP"
+    Fedi->>FASP: POST /registration
+    FASP->>Fedi: 403 Response, with link to manual registration
+    Fedi->>Admin: Redirect to FASP registration form
+    Admin->>FASP: Register manually with FASP
+    FASP->>Admin: Redirect to Fediverse Server
+    Admin->>Fedi: Click on "Enable FASP"
+    Fedi->>FASP: POST /registration
+    FASP->>Fedi: Response
+    Fedi->>Admin: Communicate success/failure
+```
+
+##### Automatic registration only
+
+When there is no manual step, the process becomes very simple:
+
+```mermaid
+sequenceDiagram
+    actor Admin
+    participant Fedi as Fediverse Server
+    participant FASP
+    Admin->>Fedi: Click on "Enable FASP"
+    Fedi->>FASP: POST /registration
+    FASP->>Fedi: Response
+    Fedi->>Admin: Communicate success/failure
+```
+
+Note that this process can be offered via a web UI, but it can also be
+fully automated, e.g. via a CLI tool.
+
+#### Manual registration
+
+Manual registration can be a fully bespoke process, modeled after
+whatever the FASPs requirements are. It will usually involve one or more
+signup forms for an administrator to fill out, but there are no special
+requirements except for two:
+
+When a fediverse server offers a link to the manual registration of a
+FASP (or redirects the administrator's browser there) it MAY append an
+HTTP GET parameter to the end of the URL with the key `return_to`. The
+value is a URL on the fediverse server.
+
+When a FASP encounters a `return_to` parameter during registration it
+SHOULD retain the URL and upon successful registration offer the
+administrator a link to go back there. FASP MUST ensure that `return_to`
+matches the server's hostname as given during registration.
+
+#### Automatic registration API
+
+To initiate automatic registration with a FASP, fediverse servers MUST
+create a new Ed25519 keypair and an unique identifier (ID) for the FASP.
+
+It MUST then make an HTTP `POST` request to the FASP's `/registration`
+endpoint.
 
 The payload of that request is a JSON object with the following keys and
 values:
 
-* `name`: The name of the FASP - this MUST have been presented to the
-  administrator during registration to make it recognizable.
-* `baseUrl`: The base URL of the FASP
-* `serverId`: The identifier for the server that the FASP generated
-* `publicKey`: The public key of the FASP, base64 encoded
+* `baseUrl`: The base URL of the fediverse server
+* `faspId`: The identifier for the FASP that the server generated
+* `publicKey`: The public key that can be used to verify messages coming
+  from the server, base64 encoded
 
 An example payload:
 
 ```
 {
-  "name": "Example FASP",
-  "baseUrl": "https://fasp.example.com",
-  "serverId": "b2ks6vm8p23w",
+  "baseUrl": "https://fedi.example.com/fasp",
+  "faspId": "b2ks6vm8p23w",
   "publicKey": "FbUJDVCftINc9FlgRu2jLagCVvOa7I2Myw8aidvkong="
 }
 ```
 
-As a result the fediverse server MUST persist this information as a
-request for FASP registration and generate an unique ID for the FASP and
-its own Ed25519 keypair for authenticating with the FASP. It MUST then
-reply with an HTTP status code `201` (Created) and a JSON object that
-contains the following keys and values:
+As a result the FASP MUST persist this information, generate an
+unique ID for the fediverse server and its own Ed25519 keypair for
+authenticating with it. It MUST then reply with an HTTP status code
+`201` (Created) and a JSON object that contains the following keys and
+values:
 
-* `faspId`: The identifier the server generated for the FASP
-* `publicKey`: The public key of the fediverse server, base64 encoded
-* `registrationCompletionUri`: An URI to redirect to in order to finish the
-  registration
+* `serverId`: The identifier the FASP generated for the server
+* `publicKey`: The public key that can be used to verify messages from
+  the FASP, base64 encoded
 
 An example payload:
 
 ```json
 {
-  "faspId": "dfkl3msw6ps3",
+  "serverId": "dfkl3msw6ps3",
   "publicKey": "KvVQVgD4/WcdgbUDWH7EVaYX9W7Jz5fGWt+Wg8h+YvI=",
-  "registrationCompletionUri": "https://fedi.example.com/admin/fasps"
 }
 ```
 
-The FASP MUST persist this data and present the administrator with a
-page that explains how to finish the registration on their server.
+If the server tried to initiate automatic registration, but the FASP
+requires a manual registration step first, it MUST respond with an HTTP
+status code `403` (Forbidden) and include the URL of the registration
+form in the response body:
 
-To that end it MAY present a link to the `registrationCompletionUri` it
-received.
-
-It MUST display a fingerprint of the FASP's public key for comparison
-purposes. The fingerprint is the Base64 encoded SHA-256 hash of the
-public key.
-
-The fediverse server MUST present a list of FASP registration requests
-to the administrator. This list MUST be accessible via regular means,
-i.e. a navigation item in the administration area.
-
-The `registrationCompletionUri` MAY lead to this list, optionally highlighting
-or expanding the registration in question. Alternatively it MAY lead to page
-that only displays the registration in question.
-
-For each registration request the fediverse server MUST display the
-`name` the FASP sent and the fingerprint of its public key.
-
-The administrator MUST be able to either accept or decline a
-registration request.
-
-The following is a sketch of how this may look in the abstract:
-
-Step 1: A fediverse server admin is presented with a registration form
-
-![A bare-bones sign-up form asking for email, server base URL and acceptance of terms of service](../../images/server_sign_up.svg)
-
-Step 2: Upon successful registration, the fingerprint of the public key
-and a link / button to the fediverse server is displayed
-
-![A webpage displaying a public key fingerprint with a button to go to the fediverse server](../../images/server_sign_up_success.svg)
-
-Step 3: The fediverse servers displays FASP registration requests,
-allows to compare name and fingerprint and then to either accept or deny
-the requests.
-
-![A list of FASP registration requests that can be expanded. The one
-expanded entry shows the fingerprint and buttons to either accept or
-deny the request.](../../images/fasp_registration_requests.svg)
+```json
+{
+  "manualRegistration": "https://fasp.example.com/sign-up"
+}
+```
 
 ### Selecting Capabilities
 
-FASPs might implement any number of specificatons. As a last step in the
+FASPs might implement any number of specifications. As a last step in the
 setup process the fediverse server administrator needs to select which
 capabilities of the FASP they want to use.
 
@@ -174,6 +244,21 @@ FASP MUST respond with an HTTP status code `204`.
 
 FASP MUST NOT make any calls to a fediverse server's APIs belonging to a
 capability that is not enabled.
+
+Fediverse servers MUST NOT persist the change unless the FASP responded
+with a `204` status code.
+
+### Revoking registrations
+
+To revoke a registration, fediverse servers can make an HTTP `DELETE`
+request to the FASPs `/registration` endpoint.
+
+In case of a successful deletion, FASP MUST respond with an HTTP status
+code `204`.
+
+In case of network issues or other temporary errors, fediverse servers
+MUST retry this request at least 3 times before persisting the
+revocation.
 
 ---
 
