@@ -93,7 +93,7 @@ sequenceDiagram
     participant FASP
     Admin->>Fedi: Click on "Enable FASP"
     Fedi->>FASP: POST /registration
-    FASP->>Fedi: 303 Response, with link to manual registration
+    FASP->>Fedi: 403 Response, with link to manual registration
     Fedi->>Admin: Redirect to FASP registration form
     Admin->>FASP: Register manually with FASP
     FASP->>Admin: Redirect to Fediverse Server
@@ -129,13 +129,14 @@ signup forms for an administrator to fill out, but there are no special
 requirements except for two:
 
 When a fediverse server offers a link to the manual registration of a
-FASP (or redirects the administrators browser there) it MAY append an
+FASP (or redirects the administrator's browser there) it MAY append an
 HTTP GET parameter to the end of the URL with the key `return_to`. The
 value is a URL on the fediverse server.
 
 When a FASP encounters a `return_to` parameter during registration it
-SHOULD persist the URL and upon successful registration offer the
-administrator a link to go back there.
+SHOULD retain the URL and upon successful registration offer the
+administrator a link to go back there. FASP MUST ensure that `return_to`
+matches the server's hostname as given during registration.
 
 #### Automatic registration API
 
@@ -184,8 +185,14 @@ An example payload:
 
 If the server tried to initiate automatic registration, but the FASP
 requires a manual registration step first, it MUST respond with an HTTP
-status code 303 and include the URL of the signup form in the `Location`
-header.
+status code `403` (Forbidden) and include the URL of the registration
+form in the response body:
+
+```json
+{
+  "manualRegistration": "https://fasp.example.com/sign-up"
+}
+```
 
 ### Selecting Capabilities
 

@@ -56,12 +56,12 @@ Note that RFC-6415 requires an XML representation, while the JSON one is
 optional. To stay in line with the specification it is recommended to
 offer both, but for the sake of FASP only the JSON one MUST be present.
 
-The base URL MUST appear as a link with a property of type
-`https://fasp.dev/ns#baseUrl`.
+The base URL MUST appear as a link with a relationship type (`rel` property)
+of `https://fasp.dev/ns#baseUrl`.
 
 FASP that require manual registration (see [the next
 chapter](registration.md) for details) MUST also include a link that
-points to the registration form and that has a property of type
+points to the registration form and that has a relationship type of
 `https://fasp.dev/ns#manualRegistration`.
 
 Example `host-meta.json`:
@@ -71,15 +71,11 @@ Example `host-meta.json`:
   "links": [
     {
       "href": "https://fasp.example.com/api",
-      "properties": {
-        "https://fasp.dev/baseUrl": true
-      }
+      "rel": "https://fasp.dev/ns#baseUrl"
     },
     {
       "href": "https://fasp.example.com/sign-up",
-      "properties": {
-        "https://fasp.dev/manualRegistration": true
-      }
+      "rel": "https://fasp.dev/ns#manualRegistration"
     }
   ]
 }
