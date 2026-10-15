@@ -18,7 +18,7 @@ The following parameters can be used:
 * `term`: This parameter MUST be present and include the text that is to
   be searched for.
 * `limit`: This parameter MAY optionally be present to give a positive
-  integer number representing the maximum nmber of results FASP should
+  integer number representing the maximum number of results FASP should
   return. If omitted this value defaults to `20`.
 * `language`: An optional [BCP47](https://tools.ietf.org/html/bcp47)
   language tag to only show accounts posting in
