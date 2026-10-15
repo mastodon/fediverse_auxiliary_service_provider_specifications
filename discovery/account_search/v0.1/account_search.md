@@ -6,7 +6,7 @@ Specification identifier: `account_search`
 
 An important part of discovery is finding people to follow. This
 capability offers a very simple API to search for accounts that have
-opted-in to being disvovered.
+opted-in to being discovered.
 
 ## Performing Full-Text Searches for Accounts
 
