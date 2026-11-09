@@ -130,13 +130,25 @@ requirements except for two:
 
 When a fediverse server offers a link to the manual registration of a
 FASP (or redirects the administrator's browser there) it MAY append an
-HTTP GET parameter to the end of the URL with the key `return_to`. The
-value is a URL on the fediverse server.
+HTTP GET parameter to the end of the URL with the key `return_to_server`
+to signal that successful registration should lead back to the server.
+The value SHOULD be an opaque identifier for this registration attempt.
 
-When a FASP encounters a `return_to` parameter during registration it
-SHOULD retain the URL and upon successful registration offer the
-administrator a link to go back there. FASP MUST ensure that `return_to`
-matches the server's hostname as given during registration.
+When a FASP encounters a `return_to_server` parameter during
+registration it SHOULD retain the identifier and upon successful
+registration either offer a link to or automatically redirect to the
+special `/registration/completion` endpoint on the fediverse server,
+passing the identifier back in the `return_id` GET parameter.
+
+Example call:
+
+```http
+GET /registration_completion?return_id=abc
+```
+
+Fediverse servers are free to implement this endpoint in any way they
+deem fit, but MUST ensure that calls to that endpoint are performed by
+an actual administrator as part of an ongoing FASP registration.
 
 #### Automatic registration API
 
