@@ -206,6 +206,12 @@ form in the response body:
 }
 ```
 
+FASP MAY reject automatic registration attempts for other reasons as well. In
+that case they MUST provide a proper HTTP status code with their reply.
+Permanently closed registration or rejection of this specific server MAY use
+either `404` (Not Found) or `410` (Gone) status codes. Temporary conditions,
+such as rate-limiting, SHOULD result in a `503` (Service Unavailable) response.
+
 ### Selecting Capabilities
 
 FASPs might implement any number of specifications. As a last step in the
